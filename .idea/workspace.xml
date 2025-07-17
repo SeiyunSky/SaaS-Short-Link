@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b4097369-6326-4c39-b290-15678da00f5e" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/ShortLinkAdminApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/biz/user/UserContext.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/biz/user/UserFlowRiskControlFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/biz/user/UserInfoDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/biz/user/UserTransmitFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/constant/RedisCacheConstant.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/convention/errorcode/BaseErrorCode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/convention/errorcode/IErrorCode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/convention/exception/AbstractException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/convention/exception/ClientException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/convention/exception/RemoteException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/convention/exception/ServiceException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/convention/result/Result.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/convention/result/Results.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/database/BaseDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/enums/UserErrorCodeEnum.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/serialize/PhoneDesensitizationSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/common/web/GlobalExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/config/DataBaseConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/config/MyMetaObjectHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/config/OpenFeignConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/config/RBloomFilterConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/config/UserConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/config/UserFlowRiskControlConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/controller/GroupController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/controller/RecycleBinController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/controller/ShortLinkController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/controller/ShortLinkStatsController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/controller/UrlTitleController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/controller/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dao/entity/GroupDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dao/entity/GroupUniqueDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dao/entity/UserDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dao/mapper/GroupMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dao/mapper/GroupUniqueMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dao/mapper/UserMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dto/req/RecycleBinRecoverReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dto/req/RecycleBinRemoveReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dto/req/RecycleBinSaveReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dto/req/ShortLinkGroupSaveReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dto/req/ShortLinkGroupSortReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dto/req/ShortLinkGroupUpdateReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dto/req/UserLoginReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dto/req/UserRegisterReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dto/req/UserUpdateReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dto/resp/ShortLinkGroupRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dto/resp/UserActualRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dto/resp/UserLoginRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/dto/resp/UserRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/ShortLinkActualRemoteService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/req/ShortLinkBatchCreateReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/req/ShortLinkCreateReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/req/ShortLinkGroupStatsAccessRecordReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/req/ShortLinkGroupStatsReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/req/ShortLinkPageReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/req/ShortLinkRecycleBinPageReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/req/ShortLinkStatsAccessRecordReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/req/ShortLinkStatsReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/req/ShortLinkUpdateReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/resp/ShortLinkBaseInfoRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/resp/ShortLinkBatchCreateRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/resp/ShortLinkCreateRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/resp/ShortLinkGroupCountQueryRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/resp/ShortLinkPageRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/resp/ShortLinkStatsAccessDailyRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/resp/ShortLinkStatsAccessRecordRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/resp/ShortLinkStatsBrowserRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/resp/ShortLinkStatsDeviceRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/resp/ShortLinkStatsLocaleCNRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/resp/ShortLinkStatsNetworkRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/resp/ShortLinkStatsOsRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/resp/ShortLinkStatsRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/resp/ShortLinkStatsTopIpRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/remote/dto/resp/ShortLinkStatsUvRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/service/GroupService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/service/RecycleBinService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/service/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/service/impl/GroupServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/service/impl/RecycleBinServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/service/impl/UserServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/toolkit/EasyExcelWebUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/com/nageoffer/shortlink/admin/toolkit/RandomGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/resources/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/resources/lua/user_flow_risk_control.lua" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/resources/shardingsphere-config-dev.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/resources/shardingsphere-config-prod.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/test/java/com/nageoffer/shortlink/admin/test/UserTableShardingTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aggregation/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aggregation/src/main/java/com/nageoffer/shortlink/aggregation/AggregationServiceApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aggregation/src/main/java/com/nageoffer/shortlink/aggregation/config/DemoModeConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aggregation/src/main/java/com/nageoffer/shortlink/aggregation/config/DemoModeProperties.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aggregation/src/main/resources/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aggregation/src/main/resources/shardingsphere-config-dev.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aggregation/src/main/resources/shardingsphere-config-prod.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/.env.development" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/.eslintrc.cjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/.prettierrc.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/pnpm-lock.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/App.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/api/axios.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/api/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/api/modules/group.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/api/modules/smallLinkPage.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/api/modules/user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/base.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/main.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/Andriod.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/Chorme.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/IE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/Safair.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/WeChat.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/Windows.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/edge.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/firefox.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/iOS.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/linux.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/macOS.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/opera.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/other.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/wifi.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/公众号二维码.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/创意工坊.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/无数据.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/沙漏倒计时.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/电脑.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/短链默认图标.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/移动网络.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/png/移动设备.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/svg/二维码.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/svg/添加.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/svg/移动竖.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/svg/链接.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/assets/svg/随机.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/components/CTable.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/components/LabelSelect.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/components/emptyList.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/core/auth.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/router/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/store/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/style.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/utils/plugins.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/views/home/HomeIndex.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/views/login/LoginIndex.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/views/mine/MineIndex.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/views/mySpace/MySpaceIndex.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/views/mySpace/components/chartsInfo/BarChart.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/views/mySpace/components/chartsInfo/ChartsInfo.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/views/mySpace/components/chartsInfo/KeyValue.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/views/mySpace/components/chartsInfo/ProgressLine.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/views/mySpace/components/chartsInfo/ProgressPie.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/views/mySpace/components/chartsInfo/TitleContent.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/views/mySpace/components/createLink/CreateLink.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/views/mySpace/components/createLink/CreateLinks.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/views/mySpace/components/editLink/EditLink.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/views/mySpace/components/qrCode/QRCode.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/src/views/recycleBin/RecycleBinIndex.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/console-vue/vite.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/format/license-header" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/format/short-link_spotless_formatter.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway/src/main/java/com/nageoffer/shortlink/gateway/GatewayServiceApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway/src/main/java/com/nageoffer/shortlink/gateway/config/Config.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway/src/main/java/com/nageoffer/shortlink/gateway/dto/GatewayErrorResult.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway/src/main/java/com/nageoffer/shortlink/gateway/filter/TokenValidateGatewayFilterFactory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway/src/main/resources/application-aggregation.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway/src/main/resources/application-dev.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway/src/main/resources/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lombok.config" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/ShortLinkApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/biz/user/UserContext.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/biz/user/UserInfoDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/biz/user/UserTransmitInterceptor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/constant/RedisKeyConstant.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/constant/ShortLinkConstant.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/convention/errorcode/BaseErrorCode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/convention/errorcode/IErrorCode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/convention/exception/AbstractException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/convention/exception/ClientException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/convention/exception/RemoteException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/convention/exception/ServiceException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/convention/result/Result.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/convention/result/Results.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/database/BaseDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/enums/VailDateTypeEnum.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/common/web/GlobalExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/config/DataBaseConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/config/GotoDomainWhiteListConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/config/MyMetaObjectHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/config/RBloomFilterConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/config/RedisStreamConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/config/SentinelRuleConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/config/UserConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/controller/RecycleBinController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/controller/ShortLinkController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/controller/ShortLinkNotfoundController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/controller/ShortLinkStatsController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/controller/UrlTitleController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/entity/GroupDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/entity/LinkAccessLogsDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/entity/LinkAccessStatsDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/entity/LinkBrowserStatsDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/entity/LinkDeviceStatsDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/entity/LinkLocaleStatsDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/entity/LinkNetworkStatsDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/entity/LinkOsStatsDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/entity/LinkStatsTodayDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/entity/ShortLinkDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/entity/ShortLinkGotoDO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/mapper/LinkAccessLogsMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/mapper/LinkAccessStatsMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/mapper/LinkBrowserStatsMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/mapper/LinkDeviceStatsMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/mapper/LinkGroupMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/mapper/LinkLocaleStatsMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/mapper/LinkNetworkStatsMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/mapper/LinkOsStatsMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/mapper/LinkStatsTodayMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/mapper/ShortLinkGotoMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dao/mapper/ShortLinkMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/biz/ShortLinkStatsRecordDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/req/RecycleBinRecoverReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/req/RecycleBinRemoveReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/req/RecycleBinSaveReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/req/ShortLinkBatchCreateReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/req/ShortLinkCreateReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/req/ShortLinkGroupStatsAccessRecordReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/req/ShortLinkGroupStatsReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/req/ShortLinkPageReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/req/ShortLinkRecycleBinPageReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/req/ShortLinkStatsAccessRecordReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/req/ShortLinkStatsReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/req/ShortLinkUpdateReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/resp/ShortLinkBaseInfoRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/resp/ShortLinkBatchCreateRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/resp/ShortLinkCreateRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/resp/ShortLinkGroupCountQueryRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/resp/ShortLinkPageRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/resp/ShortLinkStatsAccessDailyRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/resp/ShortLinkStatsAccessRecordRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/resp/ShortLinkStatsBrowserRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/resp/ShortLinkStatsDeviceRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/resp/ShortLinkStatsLocaleCNRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/resp/ShortLinkStatsNetworkRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/resp/ShortLinkStatsOsRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/resp/ShortLinkStatsRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/resp/ShortLinkStatsTopIpRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/dto/resp/ShortLinkStatsUvRespDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/handler/CustomBlockHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/initialize/ShortLinkStatsStreamInitializeTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/mq/consumer/DelayShortLinkStatsConsumer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/mq/consumer/ShortLinkStatsSaveConsumer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/mq/idempotent/MessageQueueIdempotentHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/mq/producer/DelayShortLinkStatsProducer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/mq/producer/ShortLinkStatsSaveProducer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/service/LinkStatsTodayService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/service/RecycleBinService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/service/ShortLinkService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/service/ShortLinkStatsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/service/UrlTitleService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/service/impl/LinkStatsTodayServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/service/impl/RecycleBinServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/service/impl/ShortLinkServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/service/impl/ShortLinkStatsServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/service/impl/UrlTitleServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/toolkit/HashUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/com/nageoffer/shortlink/project/toolkit/LinkUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/resources/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/resources/mapper/LinkMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config-dev.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config-prod.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/resources/templates/notfound.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/database/link-data.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/database/link.sql" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "109de151"
+}]]></component>
+  <component name="ProjectId" id="300DzAU9GLBSVuzKOGkYx6oZf0s" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "E:/ShortLink/shortlink-main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "项目",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.25410.129" />
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-IU-251.25410.129" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="b4097369-6326-4c39-b290-15678da00f5e" name="更改" comment="" />
+      <created>1752755857774</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1752755857774</updated>
+      <workItem from="1752755859051" duration="1515000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
