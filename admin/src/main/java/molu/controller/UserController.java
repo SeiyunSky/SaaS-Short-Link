@@ -25,12 +25,7 @@ public class UserController {
      */
     @GetMapping("/api/shortlink/v1/user/{username}")
     public Result<UserResponseDTO> getUser(@PathVariable String username) {
-
         UserResponseDTO result = userService.getUserByUsername(username);
-        if (result == null) {
-            return  new Result<UserResponseDTO>().setCode(UserErrorCodeEnum.USER_NOT_EXIST.code()).setMessage(UserErrorCodeEnum.USER_NOT_EXIST.message());
-        }else {
-            return Results.success(result);
-        }
+        return Results.success(result);
     }
 }
