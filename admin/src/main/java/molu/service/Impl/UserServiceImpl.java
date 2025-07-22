@@ -6,17 +6,20 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import molu.Constant.RedisCacheConstant;
 import molu.common.convention.exception.ClientException;
 import molu.common.enums.UserErrorCodeEnum;
-import molu.config.RBloomFilterConfiguration;
 import molu.dao.entity.UserDO;
 import molu.dao.mapper.UserMapper;
 import molu.dto.req.UserRegisterReqDTO;
 import molu.dto.resp.UserResponseDTO;
 import molu.service.UserService;
 import org.redisson.api.RBloomFilter;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
 
 /**
  * 用户接口实现层
@@ -26,8 +29,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements UserService {
 
-    private final RBloomFilterConfiguration rBloomFilterConfiguration;
     private final RBloomFilter<String> userRegisterCachePenetrationBloomFilter;
+    private final RedissonClient redissonClient;
 
     @Override
     public UserResponseDTO getUserByUsername(String username) {
@@ -54,12 +57,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         if(!hasUsername(requestParam.getUsername())) {
             throw new ClientException(UserErrorCodeEnum.USER_NAME_EXIST);
         }
-        log.info("Register user : {}", requestParam.getUsername());
-        int inserted = baseMapper.insert(BeanUtil.toBean(requestParam,UserDO.class));
-        if(inserted < 1) {
-            throw new ClientException(UserErrorCodeEnum.USER_SAVE_ERROR);
-        }
 
-        userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
+        RLock lock = redissonClient.getLock(RedisCacheConstant.LOCK_USER_REGISTER + requestParam.getUsername());
+        try {
+            if (lock.tryLock()) {
+                log.info("Register user : {}", requestParam.getUsername());
+                int inserted = baseMapper.insert(BeanUtil.toBean(requestParam, UserDO.class));
+                if (inserted < 1) {
+                    throw new ClientException(UserErrorCodeEnum.USER_SAVE_ERROR);
+                }
+                userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
+            }
+            throw new ClientException(UserErrorCodeEnum.USER_NAME_EXIST);
+        } finally{
+            lock.unlock();
+        }
     }
 }
