@@ -3,6 +3,7 @@ package molu.controller;
 import lombok.RequiredArgsConstructor;
 import molu.common.convention.result.Result;
 import molu.common.convention.result.Results;
+import molu.dto.req.UserRegisterReqDTO;
 import molu.dto.resp.UserResponseDTO;
 import molu.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,17 @@ public class UserController {
     @GetMapping("/api/shortlink/v1/user/has-username")
     public Result<Boolean> hasUserName(@RequestParam String username){
         return Results.success(userService.hasUsername(username));
+    }
+
+    /**
+     * 用户注册
+     * @param requestParam
+     * @return
+     */
+    @PostMapping("/api/shortlink/v1/user")
+    public  Result<Void> register(@RequestBody UserRegisterReqDTO requestParam){
+        userService.Register(requestParam);
+        return Results.success();
     }
 
 

@@ -1,14 +1,17 @@
 package molu.service.Impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import molu.common.convention.exception.ClientException;
 import molu.common.enums.UserErrorCodeEnum;
 import molu.config.RBloomFilterConfiguration;
 import molu.dao.entity.UserDO;
 import molu.dao.mapper.UserMapper;
+import molu.dto.req.UserRegisterReqDTO;
 import molu.dto.resp.UserResponseDTO;
 import molu.service.UserService;
 import org.redisson.api.RBloomFilter;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 /**
  * 用户接口实现层
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements UserService {
@@ -42,6 +46,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     @Override
     public Boolean hasUsername(String username) {
-        return userRegisterCachePenetrationBloomFilter.contains(username);
+        return !userRegisterCachePenetrationBloomFilter.contains(username);
+    }
+
+    @Override
+    public void Register(UserRegisterReqDTO requestParam) {
+        if(!hasUsername(requestParam.getUsername())) {
+            throw new ClientException(UserErrorCodeEnum.USER_NAME_EXIST);
+        }
+        log.info("Register user : {}", requestParam.getUsername());
+        int inserted = baseMapper.insert(BeanUtil.toBean(requestParam,UserDO.class));
+        if(inserted < 1) {
+            throw new ClientException(UserErrorCodeEnum.USER_SAVE_ERROR);
+        }
+
+        userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
     }
 }

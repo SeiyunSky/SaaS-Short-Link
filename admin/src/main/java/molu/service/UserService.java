@@ -2,6 +2,7 @@ package molu.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import molu.dao.entity.UserDO;
+import molu.dto.req.UserRegisterReqDTO;
 import molu.dto.resp.UserResponseDTO;
 
 /**
@@ -22,5 +23,9 @@ public interface UserService extends IService<UserDO> {
      */
     Boolean hasUsername(String username);
 
-    void Register();
+    /**
+     * 注册用户
+     * @param requestParam 注册用户请求参数
+     */
+    void Register(UserRegisterReqDTO requestParam);
 }
