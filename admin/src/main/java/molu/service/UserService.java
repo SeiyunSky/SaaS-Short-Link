@@ -2,7 +2,10 @@ package molu.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import molu.dao.entity.UserDO;
+import molu.dto.req.UserLoginReqDTO;
 import molu.dto.req.UserRegisterReqDTO;
+import molu.dto.req.UserUpdateReqDTO;
+import molu.dto.resp.UserLoginRespDTO;
 import molu.dto.resp.UserResponseDTO;
 
 /**
@@ -28,4 +31,24 @@ public interface UserService extends IService<UserDO> {
      * @param requestParam 注册用户请求参数
      */
     void Register(UserRegisterReqDTO requestParam);
+
+    /**
+     * 根据用户名修改用户
+     * @param requestParam
+     */
+    void update(UserUpdateReqDTO requestParam);
+
+    /**
+     * 用户登录
+     * @param requestParam
+     * @return
+     */
+    UserLoginRespDTO login(UserLoginReqDTO requestParam);
+
+    /**
+     * 检查是否登录
+     * @param token
+     * @return
+     */
+    Boolean checklogin(String username,String token);
 }

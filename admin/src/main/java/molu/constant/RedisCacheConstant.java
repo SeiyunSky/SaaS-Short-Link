@@ -1,4 +1,4 @@
-package molu.Constant;
+package molu.constant;
 
 /**
  * 短链接后管Redis 缓存常量类

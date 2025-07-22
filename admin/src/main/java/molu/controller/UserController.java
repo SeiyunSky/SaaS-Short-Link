@@ -1,9 +1,13 @@
 package molu.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import molu.common.convention.result.Result;
 import molu.common.convention.result.Results;
+import molu.dto.req.UserLoginReqDTO;
 import molu.dto.req.UserRegisterReqDTO;
+import molu.dto.req.UserUpdateReqDTO;
+import molu.dto.resp.UserLoginRespDTO;
 import molu.dto.resp.UserResponseDTO;
 import molu.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 用户管理控制层
  */
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -49,6 +54,34 @@ public class UserController {
         return Results.success();
     }
 
+    /**
+     * 用户修改
+     * @param requestParam
+     * @return
+     */
+    @PutMapping("/api/shortlink/v1/user")
+    public Result<Void> update(@RequestBody UserUpdateReqDTO requestParam){
+        userService.update(requestParam);
+        return Results.success();
+    }
 
+    /**
+     * 用户登录
+     * @param requestParam
+     * @return
+     */
+    @PostMapping("/api/shortlink/v1/user/login")
+    public Result<UserLoginRespDTO> login(@RequestBody UserLoginReqDTO requestParam){
+        return Results.success(userService.login(requestParam));
+    }
 
+    /**
+     * 检查是否登录
+     * @param token
+     * @return
+     */
+    @GetMapping("/api/shortlink/v1/user/check-login")
+    public Result<Boolean> login(@RequestParam("username") String username,@RequestParam("token") String token){
+        return Results.success(userService.checklogin(username,token));
+    }
 }
