@@ -58,16 +58,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
             throw new ClientException(UserErrorCodeEnum.USER_NAME_EXIST);
         }
 
+        //上锁
         RLock lock = redissonClient.getLock(RedisCacheConstant.LOCK_USER_REGISTER + requestParam.getUsername());
+
+        //判断是否获取锁
+        if(!lock.tryLock()) {
+            throw new ClientException(UserErrorCodeEnum.USER_SAVE_ERROR);
+        }
+
         try {
-            if (lock.tryLock()) {
                 log.info("Register user : {}", requestParam.getUsername());
                 int inserted = baseMapper.insert(BeanUtil.toBean(requestParam, UserDO.class));
                 if (inserted < 1) {
                     throw new ClientException(UserErrorCodeEnum.USER_SAVE_ERROR);
                 }
                 userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
-            }
             throw new ClientException(UserErrorCodeEnum.USER_NAME_EXIST);
         } finally{
             lock.unlock();
