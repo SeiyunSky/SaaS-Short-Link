@@ -1,15 +1,23 @@
 package molu.service.Impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import molu.common.biz.user.UserContext;
 import molu.dao.entity.GroupDO;
 import molu.dao.mapper.GroupMapper;
+import molu.dto.req.ShortLinkGroupUpdateReqDTO;
+import molu.dto.resp.ShortLinkGroupRespDTO;
 import molu.service.GroupService;
 import molu.toolkit.RandomCodeUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 短链接分组实现层
@@ -33,6 +41,33 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
                 .name(groupName)
                 .build();
         baseMapper.insert(groupDO);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<ShortLinkGroupRespDTO> listGroup() {
+        LambdaQueryWrapper<GroupDO> ret = Wrappers.lambdaQuery(GroupDO.class)
+                .eq(GroupDO::getDelFlag,0)
+                .eq(GroupDO::getUsername,UserContext.getUsername())
+                .orderByDesc(GroupDO::getSortOrder,GroupDO::getUpdateTime);
+        List<GroupDO> groupDOList = baseMapper.selectList(ret);
+        return BeanUtil.copyToList(groupDOList, ShortLinkGroupRespDTO.class);
+    }
+
+    @Transactional
+    @Override
+    public void updateGroup(ShortLinkGroupUpdateReqDTO requestParam) {
+        UpdateWrapper<GroupDO> ret = new UpdateWrapper<>();
+        ret.eq("username", UserContext.getUsername())
+                .eq("gid", requestParam.getGid())
+                .eq("del_flag", 0)
+                .set("name", requestParam.getName());
+
+        GroupDO groupDO =GroupDO.builder()
+                .name(requestParam.getName())
+                .build();
+        log.info("传入数据为:{},{}",groupDO,ret);
+        baseMapper.update(groupDO,ret);
     }
 
     private boolean hasGid(String gid){
