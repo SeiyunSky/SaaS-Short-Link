@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import molu.common.biz.user.UserContext;
 import molu.dao.entity.GroupDO;
 import molu.dao.mapper.GroupMapper;
 import molu.service.GroupService;
@@ -36,8 +37,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     private boolean hasGid(String gid){
         LambdaQueryWrapper<GroupDO> queryWrapper =Wrappers.lambdaQuery(GroupDO.class)
                 .eq(GroupDO::getGid, gid)
-                //TODO 设置用户名
-                .eq(GroupDO::getUsername, null);
+                .eq(GroupDO::getUsername, UserContext.getUsername());
         GroupDO hasGroup = baseMapper.selectOne(queryWrapper);
         return hasGroup != null;
     }
