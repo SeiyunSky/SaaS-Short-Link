@@ -1,7 +1,10 @@
 package molu.dao.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
+import lombok.*;
+import molu.common.database.BaseDO;
 
 import java.util.Date;
 
@@ -10,7 +13,10 @@ import java.util.Date;
  */
 @Data
 @TableName("t_group")
-public class GroupDO {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class GroupDO extends BaseDO {
     private Long id;
 
     private String gid;
@@ -18,10 +24,4 @@ public class GroupDO {
     private String name;
 
     private String username;
-
-    private Date createTime;
-
-    private Date updateTime;
-
-    private Boolean delFlag;
 }

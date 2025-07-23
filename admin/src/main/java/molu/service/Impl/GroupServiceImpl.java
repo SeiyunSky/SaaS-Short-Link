@@ -1,10 +1,13 @@
 package molu.service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import molu.dao.entity.GroupDO;
 import molu.dao.mapper.GroupMapper;
 import molu.service.GroupService;
+import molu.toolkit.RandomCodeUtil;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,4 +18,27 @@ import org.springframework.stereotype.Service;
 //todo extends是什么意思
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implements GroupService {
 
+    @Override
+    public void saveGroup(String groupName) {
+        String gid;
+
+        do {
+            gid = RandomCodeUtil.generateRandomCode();
+        } while (!hasGid(gid));
+
+        GroupDO groupDO = GroupDO.builder()
+                .gid(gid)
+                .name(groupName)
+                .build();
+        baseMapper.insert(groupDO);
+    }
+
+    private boolean hasGid(String gid){
+        LambdaQueryWrapper<GroupDO> queryWrapper =Wrappers.lambdaQuery(GroupDO.class)
+                .eq(GroupDO::getGid, gid)
+                //TODO 设置用户名
+                .eq(GroupDO::getUsername, null);
+        GroupDO hasGroup = baseMapper.selectOne(queryWrapper);
+        return hasGroup == null;
+    }
 }
