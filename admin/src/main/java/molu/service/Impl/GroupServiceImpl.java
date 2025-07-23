@@ -24,7 +24,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
 
         do {
             gid = RandomCodeUtil.generateRandomCode();
-        } while (!hasGid(gid));
+        } while (hasGid(gid));
 
         GroupDO groupDO = GroupDO.builder()
                 .gid(gid)
@@ -39,6 +39,6 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
                 //TODO 设置用户名
                 .eq(GroupDO::getUsername, null);
         GroupDO hasGroup = baseMapper.selectOne(queryWrapper);
-        return hasGroup == null;
+        return hasGroup != null;
     }
 }
