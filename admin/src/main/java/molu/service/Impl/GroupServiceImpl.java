@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import molu.common.biz.user.UserContext;
+import molu.common.database.BaseDO;
 import molu.dao.entity.GroupDO;
 import molu.dao.mapper.GroupMapper;
 import molu.dto.req.ShortLinkGroupUpdateReqDTO;
@@ -57,15 +58,27 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     @Transactional
     @Override
     public void updateGroup(ShortLinkGroupUpdateReqDTO requestParam) {
-        UpdateWrapper<GroupDO> ret = new UpdateWrapper<>();
-        ret.eq("username", UserContext.getUsername())
-                .eq("gid", requestParam.getGid())
-                .eq("del_flag", 0)
-                .set("name", requestParam.getName());
+        LambdaUpdateWrapper<GroupDO> ret = Wrappers.lambdaUpdate(GroupDO.class)
+                .eq(GroupDO::getUsername, UserContext.getUsername())
+                .eq(GroupDO::getGid, requestParam.getGid())
+                .eq(BaseDO::getDelFlag, 0);
 
         GroupDO groupDO =GroupDO.builder()
                 .name(requestParam.getName())
                 .build();
+        log.info("传入数据为:{},{}",groupDO,ret);
+        baseMapper.update(groupDO,ret);
+    }
+
+    @Override
+    public void deleteGroup(String gid) {
+        LambdaUpdateWrapper<GroupDO> ret = Wrappers.lambdaUpdate(GroupDO.class)
+                .eq(GroupDO::getUsername, UserContext.getUsername())
+                .eq(GroupDO::getGid, gid)
+                .eq(BaseDO::getDelFlag, 0);
+
+        GroupDO groupDO = new GroupDO();
+        groupDO.setDelFlag(1);
         log.info("传入数据为:{},{}",groupDO,ret);
         baseMapper.update(groupDO,ret);
     }
