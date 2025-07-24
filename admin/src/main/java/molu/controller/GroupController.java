@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import molu.common.convention.result.Result;
 import molu.common.convention.result.Results;
 import molu.dto.req.ShortLinkGroupSaveReqDTO;
+import molu.dto.req.ShortLinkGroupSortReqDTO;
 import molu.dto.req.ShortLinkGroupUpdateReqDTO;
 import molu.dto.resp.ShortLinkGroupRespDTO;
 import molu.service.GroupService;
@@ -58,6 +59,17 @@ public class GroupController {
     @DeleteMapping("/api/shortlink/v1/group")
     public Result<Void> deleteGroup(@RequestParam String gid){
         groupService.deleteGroup(gid);
+        return Results.success();
+    }
+
+    /**
+     * 排序短链接分组
+     * @param requestParam
+     * @return
+     */
+    @PostMapping("/api/shortlink/v1/group/sort")
+    public Result<Void> sortGroup(@RequestBody List<ShortLinkGroupSortReqDTO> requestParam) {
+        groupService.sortGroup(requestParam);
         return Results.success();
     }
 

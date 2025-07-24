@@ -11,6 +11,7 @@ import molu.common.biz.user.UserContext;
 import molu.common.database.BaseDO;
 import molu.dao.entity.GroupDO;
 import molu.dao.mapper.GroupMapper;
+import molu.dto.req.ShortLinkGroupSortReqDTO;
 import molu.dto.req.ShortLinkGroupUpdateReqDTO;
 import molu.dto.resp.ShortLinkGroupRespDTO;
 import molu.service.GroupService;
@@ -81,6 +82,22 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         groupDO.setDelFlag(1);
         log.info("传入数据为:{},{}",groupDO,ret);
         baseMapper.update(groupDO,ret);
+    }
+
+    @Override
+    public void sortGroup(List<ShortLinkGroupSortReqDTO> requestParam) {
+        requestParam.forEach(each -> {
+            GroupDO groupDO = GroupDO.builder()
+                    .username(UserContext.getUsername())
+                    .sortOrder(each.getSortOrder())
+                    .gid(each.getGid())
+                    .build();
+            LambdaUpdateWrapper<GroupDO> updateWrapper = Wrappers.lambdaUpdate(GroupDO.class)
+                    .eq(GroupDO::getUsername, UserContext.getUsername())
+                    .eq(GroupDO::getGid, each.getGid())
+                    .eq(BaseDO::getDelFlag, 0);
+            baseMapper.update(groupDO,updateWrapper);
+        });
     }
 
     private boolean hasGid(String gid){

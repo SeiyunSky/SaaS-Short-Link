@@ -2,6 +2,7 @@ package molu.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import molu.dao.entity.GroupDO;
+import molu.dto.req.ShortLinkGroupSortReqDTO;
 import molu.dto.req.ShortLinkGroupUpdateReqDTO;
 import molu.dto.resp.ShortLinkGroupRespDTO;
 
@@ -36,4 +37,10 @@ public interface GroupService extends IService<GroupDO> {
      * @param gid
      */
     void deleteGroup(String gid);
+
+    /**
+     * 短链接分组排序
+     * @param requestParam
+     */
+    void sortGroup(List<ShortLinkGroupSortReqDTO> requestParam);
 }
