@@ -24,7 +24,7 @@ public class UserTransmitFilter implements Filter {
     private final StringRedisTemplate stringRedisTemplate;
     private static final List<String> IGNORE_URL = Lists.newArrayList(
             "/api/shortlink/admin/v1/user/login",
-            "/api/shortlin                  k/admin/v1/user/has-username",
+            "/api/shortlink/admin/v1/user/has-username",
             "/api/shortlink/admin/v1/user"
             );
 
