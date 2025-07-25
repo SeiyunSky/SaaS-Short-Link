@@ -51,6 +51,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .append(ret)
                         .toString())
                 .build();
+
         //解决布隆杠过滤器误判问题，在数据库内复查
         try{
             baseMapper.insert(shortLinkDO);
@@ -64,8 +65,12 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 throw new ServiceException("短链接生成重复");
             }
         }
-        //添加进布隆过滤器内
-        linkCreateRegisterCachePenetrationBloomFilter.add(ret);
+        //将完整URL添加进布隆过滤器内
+        linkCreateRegisterCachePenetrationBloomFilter.add(StrBuilder
+                .create(requestParam.getDomain())
+                .append("/")
+                .append(ret)
+                .toString());
 
         //返回DTO
         return ShortLinkCreateRespDTO.builder()
