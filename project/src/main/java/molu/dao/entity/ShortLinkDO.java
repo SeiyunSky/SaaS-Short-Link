@@ -1,7 +1,10 @@
 package molu.dao.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import molu.common.database.BaseDO;
 
 import java.util.Date;
@@ -10,6 +13,9 @@ import java.util.Date;
  * 短链接实体
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("t_link")
 public class ShortLinkDO extends BaseDO {
     /**
