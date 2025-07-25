@@ -1,11 +1,15 @@
 package molu.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import molu.common.convention.result.Result;
 import molu.common.convention.result.Results;
 import molu.dto.req.ShortLinkCreateReqDTO;
+import molu.dto.req.ShortLinkPageReqDTO;
 import molu.dto.resp.ShortLinkCreateRespDTO;
+import molu.dto.resp.ShortLinkPageRespDTO;
 import molu.service.ShortLinkService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,5 +31,16 @@ public class ShortLinkController {
     public Result<ShortLinkCreateRespDTO> createShortLink(@RequestBody ShortLinkCreateReqDTO requestParam){
         shortLinkService.createShortLink(requestParam);
         return Results.success(null);
+    }
+
+    /**
+     * 分页查询短链接
+     * @param requestParam
+     * @return
+     */
+    @GetMapping("/api/shortlink/v1/page")
+    public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam){
+
+        return Results.success(shortLinkService.pageShortLink(requestParam));
     }
 }

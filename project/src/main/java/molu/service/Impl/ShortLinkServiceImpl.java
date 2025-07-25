@@ -3,6 +3,7 @@ package molu.service.Impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.StrBuilder;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,9 @@ import molu.dao.entity.ShortLinkDO;
 import molu.dao.mapper.ShortLinkMapper;
 import lombok.extern.slf4j.Slf4j;
 import molu.dto.req.ShortLinkCreateReqDTO;
+import molu.dto.req.ShortLinkPageReqDTO;
 import molu.dto.resp.ShortLinkCreateRespDTO;
+import molu.dto.resp.ShortLinkPageRespDTO;
 import molu.toolkit.HashUtil;
 import org.redisson.api.RBloomFilter;
 import org.springframework.dao.DuplicateKeyException;
@@ -78,6 +81,20 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 .originUrl(requestParam.getOriginUrl())
                 .gid(shortLinkDO.getGid())
                 .build();
+    }
+
+    @Override
+    public IPage<ShortLinkPageRespDTO> pageShortLink(ShortLinkPageReqDTO requestParam) {
+        LambdaQueryWrapper<ShortLinkDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkDO.class)
+                .eq(ShortLinkDO::getGid, requestParam.getGid())
+                .eq(ShortLinkDO::getEnableStatus,0)
+                .eq(ShortLinkDO::getDelFlag,0)
+                .orderByDesc(ShortLinkDO::getCreateTime);
+
+        IPage<ShortLinkDO> ret = baseMapper.selectPage(requestParam,queryWrapper);
+
+        return ret.convert(each->BeanUtil.toBean(each,ShortLinkPageRespDTO.class));
+
     }
 
     private String generateSuffix(ShortLinkCreateReqDTO requestParam){
