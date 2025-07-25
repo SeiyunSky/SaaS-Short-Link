@@ -1,4 +1,4 @@
-package toolkit;
+package molu.toolkit;
 import cn.hutool.core.lang.hash.MurmurHash;
 
 /**
