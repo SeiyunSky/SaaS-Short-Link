@@ -1,5 +1,6 @@
 package molu.remote.dto;
 
+import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
@@ -56,7 +57,13 @@ public interface ShortLinkRemoteService {
      * @param requestParam 修改
      */
     default void update(ShortLinkUpdateReqDTO requestParam){
-        String retStr = HttpUtil.post("http://127.0.0.1:8001/api/shortlink/v1/update",JSON.toJSONString(requestParam));
+        // Hutool的HttpUtil.post()是最简单快捷的调用方式
+        // 用HttpUtil.post()比构造PUT请求更方便（如Hutool工具类）  HttpUtil.post(url, body);
+        // 对比需要额外配置的PUT：HttpRequest.put(url).body(body).execute(
+        HttpRequest.put("http://127.0.0.1:8001/api/shortlink/v1/update")
+                .body(JSON.toJSONString(requestParam))
+                .execute();
+        //String retStr = HttpUtil.post("http://127.0.0.1:8001/api/shortlink/v1/update",JSON.toJSONString(requestParam));
     };
     /**
      * 短链接分组内数量
