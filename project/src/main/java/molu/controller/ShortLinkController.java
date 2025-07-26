@@ -6,6 +6,7 @@ import molu.common.convention.result.Result;
 import molu.common.convention.result.Results;
 import molu.dto.req.ShortLinkCreateReqDTO;
 import molu.dto.req.ShortLinkPageReqDTO;
+import molu.dto.req.ShortLinkUpdateReqDTO;
 import molu.dto.resp.ShortLinkCountQueryRespDTO;
 import molu.dto.resp.ShortLinkCreateRespDTO;
 import molu.dto.resp.ShortLinkPageRespDTO;
@@ -31,6 +32,12 @@ public class ShortLinkController {
     public Result<ShortLinkCreateRespDTO> createShortLink(@RequestBody ShortLinkCreateReqDTO requestParam){
         shortLinkService.createShortLink(requestParam);
         return Results.success(null);
+    }
+
+    @PutMapping("/api/shortlink/v1/update")
+    public Result<Void> updateShortLink(@RequestBody ShortLinkUpdateReqDTO requestParam){
+        shortLinkService.update(requestParam);
+        return Results.success();
     }
 
     /**
