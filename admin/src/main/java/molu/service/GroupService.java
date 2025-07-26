@@ -43,4 +43,11 @@ public interface GroupService extends IService<GroupDO> {
      * @param requestParam
      */
     void sortGroup(List<ShortLinkGroupSortReqDTO> requestParam);
+
+    /**
+     * 另一个
+     * @param username
+     * @param defaulter
+     */
+    void saveGroup(String username, String defaulter);
 }

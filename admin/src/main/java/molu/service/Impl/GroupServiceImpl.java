@@ -53,6 +53,23 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         baseMapper.insert(groupDO);
     }
 
+
+    public void saveGroup(String username,String groupName) {
+        String gid;
+
+        do {
+            gid = RandomCodeUtil.generateRandomCode();
+        } while (hasGid(gid));
+
+        GroupDO groupDO = GroupDO.builder()
+                .gid(gid)
+                .sortOrder(0)
+                .username(username)
+                .name(groupName)
+                .build();
+        baseMapper.insert(groupDO);
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public List<ShortLinkGroupRespDTO> listGroup() {
