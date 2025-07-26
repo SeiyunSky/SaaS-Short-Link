@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import molu.common.convention.result.Result;
 import molu.remote.dto.req.ShortLinkCreateReqDTO;
 import molu.remote.dto.req.ShortLinkPageReqDTO;
+import molu.remote.dto.req.ShortLinkUpdateReqDTO;
 import molu.remote.dto.resp.ShortLinkCountQueryRespDTO;
 import molu.remote.dto.resp.ShortLinkCreateRespDTO;
 import molu.remote.dto.resp.ShortLinkPageRespDTO;
@@ -51,6 +52,13 @@ public interface ShortLinkRemoteService {
     }
 
     /**
+     * 修改短链接分组
+     * @param requestParam 修改
+     */
+    default void update(ShortLinkUpdateReqDTO requestParam){
+        String retStr = HttpUtil.post("http://127.0.0.1:8001/api/shortlink/v1/update",JSON.toJSONString(requestParam));
+    };
+    /**
      * 短链接分组内数量
      * @param requestParam 参数
      * @return 响应
@@ -62,6 +70,5 @@ public interface ShortLinkRemoteService {
         return JSON.parseObject(retStr,new TypeReference<>(){
         });
     }
-
 
 }
