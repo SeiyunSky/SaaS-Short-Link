@@ -7,10 +7,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import molu.common.convention.result.Result;
 import molu.remote.dto.req.ShortLinkCreateReqDTO;
 import molu.remote.dto.req.ShortLinkPageReqDTO;
+import molu.remote.dto.resp.ShortLinkCountQueryRespDTO;
 import molu.remote.dto.resp.ShortLinkCreateRespDTO;
 import molu.remote.dto.resp.ShortLinkPageRespDTO;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,6 +47,19 @@ public interface ShortLinkRemoteService {
         String retPageStr = HttpUtil.get("http://127.0.0.1:8001/api/shortlink/v1/page",map);
 
         return JSON.parseObject(retPageStr,new TypeReference<Result<IPage<ShortLinkPageRespDTO>>>(){
+        });
+    }
+
+    /**
+     * 短链接分组内数量
+     * @param requestParam 参数
+     * @return 响应
+     */
+    default Result<List<ShortLinkCountQueryRespDTO>> groupShortLinkCount(List<String> requestParam){
+        Map<String,Object> map = new HashMap<>();
+        map.put("requestParam",requestParam);
+        String retStr = HttpUtil.get("http://127.0.0.1:8001/api/shortlink/v1/count",map);
+        return JSON.parseObject(retStr,new TypeReference<>(){
         });
     }
 
