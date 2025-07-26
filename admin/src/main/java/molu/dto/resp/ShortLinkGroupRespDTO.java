@@ -12,4 +12,9 @@ public class ShortLinkGroupRespDTO {
     private String name;
 
     private int sortOrder;
+
+    /**
+     * 当前分组下短链接数量
+     */
+    private Integer shortLinkCount;
 }

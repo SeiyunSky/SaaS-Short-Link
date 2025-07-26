@@ -6,13 +6,13 @@ import molu.common.convention.result.Result;
 import molu.common.convention.result.Results;
 import molu.dto.req.ShortLinkCreateReqDTO;
 import molu.dto.req.ShortLinkPageReqDTO;
+import molu.dto.resp.ShortLinkCountQueryRespDTO;
 import molu.dto.resp.ShortLinkCreateRespDTO;
 import molu.dto.resp.ShortLinkPageRespDTO;
 import molu.service.ShortLinkService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 短链接控制层
@@ -42,5 +42,15 @@ public class ShortLinkController {
     public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam){
 
         return Results.success(shortLinkService.pageShortLink(requestParam));
+    }
+
+    /**
+     * 查询分组内数量
+     * @param
+     * @return
+     */
+    @GetMapping("/api/shortlink/v1/count")
+    public Result<List<ShortLinkCountQueryRespDTO>> groupShortLinkCount(@RequestParam List<String> requestParam){
+        return Results.success(shortLinkService.groupShortLinkCount(requestParam));
     }
 }

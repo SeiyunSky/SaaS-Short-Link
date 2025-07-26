@@ -14,6 +14,7 @@ import molu.dao.mapper.ShortLinkMapper;
 import lombok.extern.slf4j.Slf4j;
 import molu.dto.req.ShortLinkCreateReqDTO;
 import molu.dto.req.ShortLinkPageReqDTO;
+import molu.dto.resp.ShortLinkCountQueryRespDTO;
 import molu.dto.resp.ShortLinkCreateRespDTO;
 import molu.dto.resp.ShortLinkPageRespDTO;
 import molu.toolkit.HashUtil;
@@ -22,6 +23,8 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import molu.service.ShortLinkService;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 短链接实现层
@@ -32,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLinkDO> implements ShortLinkService {
 
     private final RBloomFilter<String> linkCreateRegisterCachePenetrationBloomFilter;
+    private final ShortLinkMapper shortLinkMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -95,6 +99,11 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
 
         return ret.convert(each->BeanUtil.toBean(each,ShortLinkPageRespDTO.class));
 
+    }
+
+    @Override
+    public List<ShortLinkCountQueryRespDTO> groupShortLinkCount(List<String> requestParam) {
+        return shortLinkMapper.groupShortLinkCount(requestParam);
     }
 
     private String generateSuffix(ShortLinkCreateReqDTO requestParam){
