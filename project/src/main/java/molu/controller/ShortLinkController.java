@@ -1,6 +1,8 @@
 package molu.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import molu.common.convention.result.Result;
 import molu.common.convention.result.Results;
@@ -24,20 +26,25 @@ public class ShortLinkController {
 
     private final ShortLinkService shortLinkService;
 
+    @GetMapping("/{short-uri:[a-zA-Z0-9]{6}}")
+    public void restoreUrl(@PathVariable("short-uri") String shortUri, HttpServletRequest request, HttpServletResponse response) {
+        shortLinkService.restoreUrl(shortUri,request,response);
+    }
+
     /**
      * 创建短链接
-     * @return
+     * @return 参数
      */
     @PostMapping("/api/shortlink/v1/create")
     public Result<ShortLinkCreateRespDTO> createShortLink(@RequestBody ShortLinkCreateReqDTO requestParam){
-        shortLinkService.createShortLink(requestParam);
-        return Results.success(null);
+        return Results.success(shortLinkService.createShortLink(requestParam));
+
     }
 
     /**
      * 修改短链接分组
-     * @param requestParam
-     * @return
+     * @param requestParam 参数
+     * @return 参数
      */
     @PutMapping("/api/shortlink/v1/update")
     public Result<Void> updateShortLink(@RequestBody ShortLinkUpdateReqDTO requestParam){
@@ -47,8 +54,8 @@ public class ShortLinkController {
 
     /**
      * 分页查询短链接
-     * @param requestParam
-     * @return
+     * @param requestParam 参数
+     * @return 参数
      */
     @GetMapping("/api/shortlink/v1/page")
     public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam){
@@ -58,8 +65,8 @@ public class ShortLinkController {
 
     /**
      * 查询分组内数量
-     * @param
-     * @return
+     * @param requestParam 参数
+     * @return 参数
      */
     @GetMapping("/api/shortlink/v1/count")
     public Result<List<ShortLinkCountQueryRespDTO>> groupShortLinkCount(@RequestParam List<String> requestParam){
