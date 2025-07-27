@@ -12,11 +12,6 @@ import java.util.Date;
 public class ShortLinkCreateReqDTO extends BaseDO {
 
     /**
-     * 协议
-     */
-    private String protocol;
-
-    /**
      * 域名
      */
     private String domain;
