@@ -21,7 +21,10 @@ public class LinkUtil {
      */
     public static long getLinkCacheValidDate(Date validDate) {
         return Optional.ofNullable(validDate)
-                .map(each -> DateUtil.between(new Date(),each, DateUnit.MS))
-                .orElse(DEFAULT_CACHE_VALID_TIME);
+                .map(each -> {
+                    long ttl = DateUtil.between(new Date(), each, DateUnit.MS);
+                    return Math.max(0, ttl); // 确保TTL非负
+                })
+                .orElse(DEFAULT_CACHE_VALID_TIME );
     }
 }
