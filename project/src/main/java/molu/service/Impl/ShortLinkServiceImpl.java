@@ -26,6 +26,7 @@ import molu.dto.resp.ShortLinkCountQueryRespDTO;
 import molu.dto.resp.ShortLinkCreateRespDTO;
 import molu.dto.resp.ShortLinkPageRespDTO;
 import molu.toolkit.HashUtil;
+import molu.toolkit.LinkUtil;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -37,9 +38,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
-import static molu.common.constant.RedisKeyConstant.GOTO_KEY;
-import static molu.common.constant.RedisKeyConstant.LOCK_GOTO_KEY;
+import static molu.common.constant.RedisKeyConstant.*;
 
 /**
  * 短链接实现层
@@ -55,6 +56,11 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final ShortLinkMapper shortLinkMapper;
     private final RedissonClient redissonClient;
 
+    /**
+     * 创建短链接
+     * @param requestParam 创建
+     * @return 响应
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ShortLinkCreateRespDTO createShortLink(ShortLinkCreateReqDTO requestParam) {
@@ -96,6 +102,9 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 throw new ServiceException("短链接生成重复");
             }
         }
+        //创建期间直接塞进Redis,进行缓存预热
+        stringRedisTemplate.opsForValue()
+                .set(fullshortLink, requestParam.getOriginUrl(), LinkUtil.getLinkCacheValidDate(requestParam.getValidDate()),TimeUnit.MILLISECONDS);
         //将完整URL添加进布隆过滤器内
         linkCreateRegisterCachePenetrationBloomFilter.add(StrBuilder
                 .create(requestParam.getDomain())
@@ -180,6 +189,12 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         }
     }
 
+    /**
+     * 核心功能，跳转
+     * @param shortUri 短链接后缀
+     * @param request 请求
+     * @param response 响应
+     */
     @SneakyThrows
     @Override
     public void restoreUrl(String shortUri, HttpServletRequest request, HttpServletResponse response) {
@@ -187,10 +202,23 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         //TODO 原则上应该是域名不含http，domain里面存一个，拼接的数据应该符合domain+短链接
         String fullShortUrl = request.getServerName()+":"+request.getServerPort()+"/"+shortUri;
 
+        //TODO 当前所有空return都需要进行风险控制
         //在Redis缓存里查询数据
         String originLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_KEY,fullShortUrl));
+
         if(StrUtil.isNotBlank(originLink)){
             response.sendRedirect(originLink);
+            return;
+        }
+
+        //对于缓存穿透，第一层，布隆过滤器
+        boolean contains = linkCreateRegisterCachePenetrationBloomFilter.contains(fullShortUrl);
+        if(!contains){
+            return;
+        }
+        //检查是不是空数据，避免对无效空数据发起查询
+        String gotoIsNull = stringRedisTemplate.opsForValue().get(String.format(GOTO_IS_NULL_KEY,fullShortUrl));
+        if(StrUtil.isNotBlank(gotoIsNull)){
             return;
         }
 
@@ -212,7 +240,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             ShortLinkGotoDO shortLinkGotoDO = shortLinkGoToMapper.selectOne(wrapper);
             //如果数据库不存在路由信息，报错
             if(shortLinkGotoDO == null) {
-                //TODO 需要进行风控
+                stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_KEY,fullShortUrl),"-",30, TimeUnit.MINUTES);
                 return;
             }
 
@@ -233,6 +261,11 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         }
     }
 
+    /**
+     * 内部生成6位小短码用
+     * @param requestParam 内部生成6位小短码用
+     * @return 内部生成6位小短码用
+     */
     private String generateSuffix(ShortLinkCreateReqDTO requestParam){
         String suffix;
         //防止生成过多次
