@@ -104,7 +104,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         }
         //创建期间直接塞进Redis,进行缓存预热
         stringRedisTemplate.opsForValue()
-                .set(fullshortLink, requestParam.getOriginUrl(), LinkUtil.getLinkCacheValidDate(requestParam.getValidDate()),TimeUnit.MILLISECONDS);
+                .set(String.format(GOTO_KEY,fullshortLink), requestParam.getOriginUrl(), LinkUtil.getLinkCacheValidDate(requestParam.getValidDate()),TimeUnit.MILLISECONDS);
         //将完整URL添加进布隆过滤器内
         linkCreateRegisterCachePenetrationBloomFilter.add(StrBuilder
                 .create(requestParam.getDomain())
