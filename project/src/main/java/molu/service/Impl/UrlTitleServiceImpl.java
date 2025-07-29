@@ -5,7 +5,6 @@ import molu.service.UrlTitleService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 

@@ -173,6 +173,13 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .set(false, ShortLinkDO::getValidDate, null);
 
                 baseMapper.update(shortLinkDO, ret);
+                //清除缓存内旧东西，放入新的
+                stringRedisTemplate.delete(String.format(GOTO_KEY,shortLink.getFullShortUrl()));
+                stringRedisTemplate.opsForValue()
+                        .set(String.format(GOTO_KEY,requestParam.getFullShortUrl()), shortLinkDO.getOriginUrl(),
+                                LinkUtil.getLinkCacheValidDate(shortLinkDO.getValidDate()),TimeUnit.MILLISECONDS
+                        );
+
             } else {
                 LambdaUpdateWrapper<ShortLinkDO> ret = Wrappers.lambdaUpdate(ShortLinkDO.class)
                         .eq(ShortLinkDO::getFullShortUrl, requestParam.getFullShortUrl())
@@ -182,6 +189,11 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .set(false, ShortLinkDO::getValidDate, null);
 
                 baseMapper.delete(ret);
+                stringRedisTemplate.delete(String.format(GOTO_KEY,shortLink.getFullShortUrl()));
+                stringRedisTemplate.opsForValue()
+                        .set(String.format(GOTO_KEY,requestParam.getFullShortUrl()), shortLinkDO.getOriginUrl(),
+                                LinkUtil.getLinkCacheValidDate(shortLinkDO.getValidDate()),TimeUnit.MILLISECONDS
+                        );
                 shortLinkDO.setGid(requestParam.getGid());
                 baseMapper.insert(shortLinkDO);
             }
@@ -253,21 +265,19 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .eq(ShortLinkDO::getDelFlag, 0)
                     .eq(ShortLinkDO::getEnableStatus, 0);
             ShortLinkDO shortLinkDO = baseMapper.selectOne(ret);
-            // 如果找到有效短链接，写入缓存并重定向
-            if(shortLinkDO != null) {
+            // 如果没找到有效短链接，就放弃寻找
+            if(shortLinkDO == null ||shortLinkDO.getValidDate().before(new Date())) {
                 //如果过期，就是无了
-                if(shortLinkDO.getValidDate()!=null && shortLinkDO.getValidDate().before(new Date())){
-                    stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_KEY,fullShortUrl),"-",30, TimeUnit.MINUTES);
+                 stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_KEY,fullShortUrl),"-",30, TimeUnit.MINUTES);
                     response.sendRedirect("/page/notfound");
                     return;
-                }
 
-                stringRedisTemplate.opsForValue()
-                        .set(String.format(GOTO_KEY,fullShortUrl), shortLinkDO.getOriginUrl(),
-                        LinkUtil.getLinkCacheValidDate(shortLinkDO.getValidDate()),TimeUnit.MILLISECONDS
-                );
-                response.sendRedirect(shortLinkDO.getOriginUrl());
             }
+            stringRedisTemplate.opsForValue()
+                    .set(String.format(GOTO_KEY,fullShortUrl), shortLinkDO.getOriginUrl(),
+                            LinkUtil.getLinkCacheValidDate(shortLinkDO.getValidDate()),TimeUnit.MILLISECONDS
+                    );
+            response.sendRedirect(shortLinkDO.getOriginUrl());
         }finally {
             lock.unlock(); // 释放锁
         }

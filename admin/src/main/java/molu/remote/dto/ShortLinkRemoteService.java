@@ -6,6 +6,8 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import molu.common.convention.result.Result;
+import molu.common.convention.result.Results;
+import molu.remote.dto.req.RecycleBinSaveReqDTO;
 import molu.remote.dto.req.ShortLinkCreateReqDTO;
 import molu.remote.dto.req.ShortLinkPageReqDTO;
 import molu.remote.dto.req.ShortLinkUpdateReqDTO;
@@ -90,4 +92,11 @@ public interface ShortLinkRemoteService {
         });
     }
 
+    /**
+     * 修改短链接启用禁用状态，保存回收站
+     * @param requestParam RBSaveDTO
+     */
+    default void saveRecycleBin(RecycleBinSaveReqDTO requestParam){
+        String retStr = HttpUtil.post("http://127.0.0.1:8001/api/shortlink/v1/recyclebin/saver",JSON.toJSONString(requestParam));
+    };
 }
