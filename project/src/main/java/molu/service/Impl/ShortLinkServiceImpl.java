@@ -36,6 +36,7 @@ import org.springframework.stereotype.Service;
 import molu.service.ShortLinkService;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -253,7 +254,16 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             ShortLinkDO shortLinkDO = baseMapper.selectOne(ret);
             // 如果找到有效短链接，写入缓存并重定向
             if(shortLinkDO != null) {
-                stringRedisTemplate.opsForValue().set(String.format(GOTO_KEY,fullShortUrl),shortLinkDO.getOriginUrl());
+                //如果过期，就是无了
+                if(shortLinkDO.getValidDate()!=null && shortLinkDO.getValidDate().before(new Date())){
+                    stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_KEY,fullShortUrl),"-",30, TimeUnit.MINUTES);
+                    return;
+                }
+
+                stringRedisTemplate.opsForValue()
+                        .set(String.format(GOTO_KEY,fullShortUrl), shortLinkDO.getOriginUrl(),
+                        LinkUtil.getLinkCacheValidDate(shortLinkDO.getValidDate()),TimeUnit.MILLISECONDS
+                );
                 response.sendRedirect(shortLinkDO.getOriginUrl());
             }
         }finally {
