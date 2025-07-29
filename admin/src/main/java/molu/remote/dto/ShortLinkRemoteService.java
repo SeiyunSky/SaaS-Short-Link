@@ -12,6 +12,7 @@ import molu.remote.dto.req.ShortLinkUpdateReqDTO;
 import molu.remote.dto.resp.ShortLinkCountQueryRespDTO;
 import molu.remote.dto.resp.ShortLinkCreateRespDTO;
 import molu.remote.dto.resp.ShortLinkPageRespDTO;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
 import java.util.List;
@@ -75,6 +76,17 @@ public interface ShortLinkRemoteService {
         map.put("requestParam",requestParam);
         String retStr = HttpUtil.get("http://127.0.0.1:8001/api/shortlink/v1/count",map);
         return JSON.parseObject(retStr,new TypeReference<>(){
+        });
+    }
+
+    /**
+     * 根据URL获取标题
+     * @param url 原网站
+     * @return 标题
+     */
+    default Result<String> getTitleByUrl(@RequestParam String url){
+        String ret = HttpUtil.get("http://127.0.0.1:8001/api/shortlink/v1/title?url="+url);
+        return JSON.parseObject(ret,new TypeReference<>(){
         });
     }
 
