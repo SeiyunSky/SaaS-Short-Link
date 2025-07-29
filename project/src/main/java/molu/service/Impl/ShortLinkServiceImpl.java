@@ -202,8 +202,6 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         //TODO 这里的拼接是我为了能让程序跑起来临时根据当前域名拼接的，实际上还需要做改动
         //TODO 原则上应该是域名不含http，domain里面存一个，拼接的数据应该符合domain+短链接
         String fullShortUrl = request.getServerName()+":"+request.getServerPort()+"/"+shortUri;
-
-        //TODO 当前所有空return都需要进行风险控制
         //在Redis缓存里查询数据
         String originLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_KEY,fullShortUrl));
 
@@ -215,11 +213,13 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         //对于缓存穿透，第一层，布隆过滤器
         boolean contains = linkCreateRegisterCachePenetrationBloomFilter.contains(fullShortUrl);
         if(!contains){
+            response.sendRedirect("/page/notfound");
             return;
         }
         //检查是不是空数据，避免对无效空数据发起查询
         String gotoIsNull = stringRedisTemplate.opsForValue().get(String.format(GOTO_IS_NULL_KEY,fullShortUrl));
         if(StrUtil.isNotBlank(gotoIsNull)){
+            response.sendRedirect("/page/notfound");
             return;
         }
 
@@ -242,6 +242,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             //如果数据库不存在路由信息，报错
             if(shortLinkGotoDO == null) {
                 stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_KEY,fullShortUrl),"-",30, TimeUnit.MINUTES);
+                response.sendRedirect("/page/notfound");
                 return;
             }
 
@@ -257,6 +258,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 //如果过期，就是无了
                 if(shortLinkDO.getValidDate()!=null && shortLinkDO.getValidDate().before(new Date())){
                     stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_KEY,fullShortUrl),"-",30, TimeUnit.MINUTES);
+                    response.sendRedirect("/page/notfound");
                     return;
                 }
 
