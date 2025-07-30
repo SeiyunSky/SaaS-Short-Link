@@ -72,4 +72,5 @@ public class ShortLinkController {
     public Result<List<ShortLinkCountQueryRespDTO>> groupShortLinkCount(@RequestParam List<String> requestParam){
         return Results.success(shortLinkService.groupShortLinkCount(requestParam));
     }
+
 }

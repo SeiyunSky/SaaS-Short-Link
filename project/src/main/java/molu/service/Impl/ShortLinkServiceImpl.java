@@ -266,7 +266,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .eq(ShortLinkDO::getEnableStatus, 0);
             ShortLinkDO shortLinkDO = baseMapper.selectOne(ret);
             // 如果没找到有效短链接，就放弃寻找
-            if(shortLinkDO == null ||shortLinkDO.getValidDate().before(new Date())) {
+            if(shortLinkDO == null || (shortLinkDO.getValidDate().before(new Date()) && shortLinkDO.getValidDate()!=null)) {
                 //如果过期，就是无了
                  stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_KEY,fullShortUrl),"-",30, TimeUnit.MINUTES);
                     response.sendRedirect("/page/notfound");

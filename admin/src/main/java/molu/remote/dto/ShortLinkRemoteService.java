@@ -94,7 +94,7 @@ public interface ShortLinkRemoteService {
      * @param requestParam RBSaveDTO
      */
     default void saveRecycleBin(RecycleBinSaveReqDTO requestParam){
-        String retStr = HttpUtil.post("http://127.0.0.1:8001/api/shortlink/v1/recyclebin/saver",JSON.toJSONString(requestParam));
+        HttpUtil.post("http://127.0.0.1:8001/api/shortlink/v1/recyclebin/saver",JSON.toJSONString(requestParam));
     };
 
     /**
@@ -110,6 +110,14 @@ public interface ShortLinkRemoteService {
         String retStr = HttpUtil.get("http://127.0.0.1:8001/api/shortlink/v1/recyclebin/page",map);
         return JSON.parseObject(retStr,new TypeReference<Result<IPage<ShortLinkPageRespDTO>>>(){
         });
+    };
+
+    /**
+     * 恢复短链接
+     * @param requestParam RB
+     */
+    default void recoverShortLink(RecycleBinRecoverReqDTO requestParam){
+        HttpUtil.post("http://127.0.0.1:8001/api/shortlink/v1/recyclebin/recover",JSON.toJSONString(requestParam));
     };
 
 

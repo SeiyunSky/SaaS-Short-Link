@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import molu.dao.entity.ShortLinkDO;
 import molu.dao.mapper.ShortLinkMapper;
+import molu.dto.req.RecycleBinRecoverReqDTO;
 import molu.dto.req.RecycleBinSaveReqDTO;
 import molu.dto.req.ShortLinkPageReqDTO;
 import molu.dto.req.ShortLinkRecycleBinPageReqDTO;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
+import static molu.common.constant.RedisKeyConstant.GOTO_IS_NULL_KEY;
 import static molu.common.constant.RedisKeyConstant.GOTO_KEY;
 
 /**
@@ -57,7 +59,7 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
     /**
      *
      * @param requestParam 分页数据
-     * @return
+     * @return 返回
      */
     @Override
     public IPage<ShortLinkPageRespDTO> pageShortLink(ShortLinkRecycleBinPageReqDTO requestParam) {
@@ -69,6 +71,28 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
 
         IPage<ShortLinkDO> ret = baseMapper.selectPage(requestParam,queryWrapper);
         return ret.convert(each-> BeanUtil.toBean(each,ShortLinkPageRespDTO.class));
+
+    }
+
+    @Override
+    public void recoverShortLink(RecycleBinRecoverReqDTO requestParam) {
+        LambdaUpdateWrapper<ShortLinkDO> queryWrapper = Wrappers.lambdaUpdate(ShortLinkDO.class)
+                .eq(ShortLinkDO::getFullShortUrl, requestParam.getFullShortUrl())
+                .eq(ShortLinkDO::getGid, requestParam.getGid())
+                .eq(ShortLinkDO::getEnableStatus,1)
+                .eq(ShortLinkDO::getDelFlag,0);
+
+        ShortLinkDO shortLinkDO = ShortLinkDO.builder()
+                .enableStatus(0)
+                .build();
+
+        baseMapper.update(shortLinkDO, queryWrapper);
+        //进行短链接预热，并且将对应的空白Key删掉
+        stringRedisTemplate.delete(String.format(GOTO_IS_NULL_KEY,requestParam.getFullShortUrl()));
+
+        stringRedisTemplate.opsForValue().set(String.format(GOTO_KEY,requestParam.getFullShortUrl()), shortLinkDO.getOriginUrl(),
+                LinkUtil.getLinkCacheValidDate(shortLinkDO.getValidDate()),TimeUnit.MILLISECONDS);
+
 
     }
 }
