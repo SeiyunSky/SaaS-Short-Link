@@ -1,10 +1,15 @@
 package molu.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import molu.common.convention.result.Result;
 import molu.common.convention.result.Results;
+import molu.remote.dto.req.ShortLinkRecycleBinPageReqDTO;
 import molu.remote.dto.ShortLinkRemoteService;
 import molu.remote.dto.req.RecycleBinSaveReqDTO;
+import molu.remote.dto.resp.ShortLinkPageRespDTO;
+import molu.service.RecycleBinService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class RecycleBinController {
 
+    private final RecycleBinService recycleBinService;
     ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService() {};
 
     /**
@@ -23,9 +29,19 @@ public class RecycleBinController {
      * @param requestParam 反应
      * @return 反应
      */
-    @PostMapping("/api/shortlink/v1/recyclebin/saver")
+    @PostMapping("/api/shortlink/admin/v1/recyclebin/saver")
     public Result<Void> saveRecycleBin(@RequestBody RecycleBinSaveReqDTO requestParam) {
         shortLinkRemoteService.saveRecycleBin(requestParam);
         return Results.success();
+    }
+
+    /**
+     * 分页查询短链接
+     * @param requestParam 参数
+     * @return 参数
+     */
+    @GetMapping("/api/shortlink/admin/v1/recyclebin/page")
+    public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkRecycleBinPageReqDTO requestParam){
+        return recycleBinService.pageShortLinkRecycleOne(requestParam);
     }
 }
