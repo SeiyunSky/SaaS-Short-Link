@@ -4,26 +4,25 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import molu.common.convention.exception.ClientException;
 import molu.dao.entity.ShortLinkDO;
 import molu.dao.mapper.ShortLinkMapper;
-import molu.dto.req.RecycleBinRecoverReqDTO;
-import molu.dto.req.RecycleBinSaveReqDTO;
-import molu.dto.req.ShortLinkPageReqDTO;
-import molu.dto.req.ShortLinkRecycleBinPageReqDTO;
+import molu.dto.req.*;
 import molu.dto.resp.ShortLinkPageRespDTO;
 import molu.service.RecycleBinService;
 import molu.toolkit.LinkUtil;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.TimeUnit;
 
 import static molu.common.constant.RedisKeyConstant.GOTO_IS_NULL_KEY;
 import static molu.common.constant.RedisKeyConstant.GOTO_KEY;
+import static molu.common.convention.errorcode.BaseErrorCode.CLIENT_ERROR;
 
 /**
  * 回收站管理接口实现层
@@ -74,6 +73,7 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
 
     }
 
+    @Transactional
     @Override
     public void recoverShortLink(RecycleBinRecoverReqDTO requestParam) {
         LambdaUpdateWrapper<ShortLinkDO> queryWrapper = Wrappers.lambdaUpdate(ShortLinkDO.class)
@@ -82,9 +82,20 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
                 .eq(ShortLinkDO::getEnableStatus,1)
                 .eq(ShortLinkDO::getDelFlag,0);
 
+        ShortLinkDO existingLink = baseMapper.selectOne(queryWrapper);
+        if (existingLink == null) {
+            throw new ClientException(CLIENT_ERROR);
+        }
+
         ShortLinkDO shortLinkDO = ShortLinkDO.builder()
                 .enableStatus(0)
                 .build();
+
+        int updatedRows = baseMapper.update(shortLinkDO, queryWrapper);
+
+        if (updatedRows == 0) {
+            throw new ClientException("短链接恢复失败");
+        }
 
         baseMapper.update(shortLinkDO, queryWrapper);
         //进行短链接预热，并且将对应的空白Key删掉
@@ -92,7 +103,20 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
 
         stringRedisTemplate.opsForValue().set(String.format(GOTO_KEY,requestParam.getFullShortUrl()), shortLinkDO.getOriginUrl(),
                 LinkUtil.getLinkCacheValidDate(shortLinkDO.getValidDate()),TimeUnit.MILLISECONDS);
+    }
 
-
+    @Transactional
+    @Override
+    public void deleteShortLink(RecycleBinDeleteReqDTO requestParam) {
+        ShortLinkDO entity = baseMapper.selectOne(new LambdaQueryWrapper<ShortLinkDO>()
+                .eq(ShortLinkDO::getGid, requestParam.getGid())
+                .eq(ShortLinkDO::getFullShortUrl, requestParam.getFullShortUrl())
+                .eq(ShortLinkDO::getEnableStatus, 1)
+        );
+        if (entity== null) {
+            throw new ClientException(CLIENT_ERROR);
+        }
+        // 触发自动逻辑删除
+        baseMapper.deleteById(entity.getId());
     }
 }

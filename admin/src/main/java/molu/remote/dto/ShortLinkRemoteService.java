@@ -1,6 +1,7 @@
 package molu.remote.dto;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
@@ -117,7 +118,45 @@ public interface ShortLinkRemoteService {
      * @param requestParam RB
      */
     default void recoverShortLink(RecycleBinRecoverReqDTO requestParam){
-        HttpUtil.post("http://127.0.0.1:8001/api/shortlink/v1/recyclebin/recover",JSON.toJSONString(requestParam));
+        try {
+            HttpResponse response = HttpRequest.post("http://127.0.0.1:8001/api/shortlink/v1/recyclebin/recover")
+                    .body(JSON.toJSONString(requestParam))
+                    .execute();
+
+            // 解析响应
+            Map<String, Object> result = JSON.parseObject(
+                    response.body(),
+                    new TypeReference<Map<String, Object>>() {}
+            );
+            // 检查是否成功
+            if (result != null && Boolean.FALSE.equals(result.get("success"))) {
+                String errorMsg = (String) result.getOrDefault("message", "删除短链接失败");
+                throw new RuntimeException(errorMsg);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("操作失败: " + e.getMessage());
+        }
+    };
+
+    default void deleteShortLink(RecycleBinDeleteReqDTO requestParam){
+        try {
+            HttpResponse response = HttpRequest.post("http://127.0.0.1:8001/api/shortlink/v1/recyclebin/delete")
+                    .body(JSON.toJSONString(requestParam))
+                    .execute();
+
+            // 解析响应
+            Map<String, Object> result = JSON.parseObject(
+                    response.body(),
+                    new TypeReference<Map<String, Object>>() {}
+            );
+            // 检查是否成功
+            if (result != null && Boolean.FALSE.equals(result.get("success"))) {
+                String errorMsg = (String) result.getOrDefault("message", "删除短链接失败");
+                throw new RuntimeException(errorMsg);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("操作失败: " + e.getMessage());
+        }
     };
 
 
