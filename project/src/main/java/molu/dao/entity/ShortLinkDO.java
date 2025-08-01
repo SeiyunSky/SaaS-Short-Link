@@ -1,6 +1,8 @@
 package molu.dao.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +24,7 @@ public class ShortLinkDO extends BaseDO {
     /**
      * ID
      */
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**

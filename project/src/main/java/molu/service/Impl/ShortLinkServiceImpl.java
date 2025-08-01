@@ -1,6 +1,8 @@
 package molu.service.Impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.Week;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -14,8 +16,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import molu.common.convention.exception.ClientException;
 import molu.common.convention.exception.ServiceException;
+import molu.dao.entity.LinkAccessStatsDO;
 import molu.dao.entity.ShortLinkDO;
 import molu.dao.entity.ShortLinkGotoDO;
+import molu.dao.mapper.LinkAccessStatsMapper;
 import molu.dao.mapper.ShortLinkGotoMapper;
 import molu.dao.mapper.ShortLinkMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +60,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final RBloomFilter<String> linkCreateRegisterCachePenetrationBloomFilter;
     private final ShortLinkMapper shortLinkMapper;
     private final RedissonClient redissonClient;
+    private final LinkAccessStatsMapper linkAccessStatsMapper;
 
     /**
      * 创建短链接
@@ -218,6 +223,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         String originLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_KEY,fullShortUrl));
 
         if(StrUtil.isNotBlank(originLink)){
+            shortLinkStats(fullShortUrl, null, request,response);
             response.sendRedirect(originLink);
             return;
         }
@@ -277,10 +283,41 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .set(String.format(GOTO_KEY,fullShortUrl), shortLinkDO.getOriginUrl(),
                             LinkUtil.getLinkCacheValidDate(shortLinkDO.getValidDate()),TimeUnit.MILLISECONDS
                     );
+            shortLinkStats(fullShortUrl, shortLinkDO.getGid(), request,response);
             response.sendRedirect(shortLinkDO.getOriginUrl());
         }finally {
             lock.unlock(); // 释放锁
         }
+    }
+
+    private void shortLinkStats(String fullShortUrl,String gid,HttpServletRequest request, HttpServletResponse response){
+        try {
+            if(StrUtil.isBlank(gid)){
+                shortLinkGoToMapper.selectOne(Wrappers.lambdaQuery(ShortLinkGotoDO.class)
+                        .eq(ShortLinkGotoDO::getFullShortUrl,fullShortUrl)
+                );
+            }
+            //获取指定小时
+            int hour = DateUtil.hour(new Date(), true);
+            //获取指定星期
+            Week week = DateUtil.dayOfWeekEnum(new Date());
+            int value = week.getValue();
+
+            LinkAccessStatsDO build = LinkAccessStatsDO.builder()
+                    .pv(1)
+                    .uv(1)
+                    .uip(1)
+                    .hour(hour)
+                    .weekday(value)
+                    .fullShortUrl(fullShortUrl)
+                    .gid(gid)
+                    .date(new Date())
+                    .build();
+            linkAccessStatsMapper.shortLinkStats(build) ;
+        }catch (Throwable e){
+            log.error("短链接访问量统计异常");
+        }
+
     }
 
     /**
