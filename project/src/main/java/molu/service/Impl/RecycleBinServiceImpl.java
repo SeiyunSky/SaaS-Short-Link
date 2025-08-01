@@ -99,7 +99,6 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
 
         //进行短链接预热，并且将对应的空白Key删掉
         stringRedisTemplate.delete(String.format(GOTO_IS_NULL_KEY,requestParam.getFullShortUrl()));
-
         stringRedisTemplate.opsForValue().set(String.format(GOTO_KEY,requestParam.getFullShortUrl()), existingLink.getOriginUrl(),
                 LinkUtil.getLinkCacheValidDate(existingLink.getValidDate()),TimeUnit.MILLISECONDS);
     }

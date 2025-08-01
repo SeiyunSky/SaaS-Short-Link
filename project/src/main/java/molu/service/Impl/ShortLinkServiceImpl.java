@@ -293,15 +293,16 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private void shortLinkStats(String fullShortUrl,String gid,HttpServletRequest request, HttpServletResponse response){
         try {
             if(StrUtil.isBlank(gid)){
-                shortLinkGoToMapper.selectOne(Wrappers.lambdaQuery(ShortLinkGotoDO.class)
+                ShortLinkGotoDO shortLinkGotoDO = shortLinkGoToMapper.selectOne(Wrappers.lambdaQuery(ShortLinkGotoDO.class)
                         .eq(ShortLinkGotoDO::getFullShortUrl,fullShortUrl)
                 );
+                gid = shortLinkGotoDO.getGid();
             }
             //获取指定小时
             int hour = DateUtil.hour(new Date(), true);
             //获取指定星期
             Week week = DateUtil.dayOfWeekEnum(new Date());
-            int value = week.getValue();
+            int value = week.getIso8601Value();
 
             LinkAccessStatsDO build = LinkAccessStatsDO.builder()
                     .pv(1)
@@ -311,7 +312,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .weekday(value)
                     .fullShortUrl(fullShortUrl)
                     .gid(gid)
-                    .date(new Date())
+                    .date(DateUtil.beginOfDay(new Date()))
                     .build();
             linkAccessStatsMapper.shortLinkStats(build) ;
         }catch (Throwable e){
