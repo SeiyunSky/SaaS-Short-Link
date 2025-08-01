@@ -6,7 +6,6 @@ dataSources:
     jdbcUrl: jdbc:mysql://127.0.0.1:3306/short_link?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
     username: Lway
     password: 144790
-
 rules:
   - !SHARDING
     tables:

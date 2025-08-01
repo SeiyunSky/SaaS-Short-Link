@@ -97,12 +97,11 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
             throw new ClientException("短链接恢复失败");
         }
 
-        baseMapper.update(shortLinkDO, queryWrapper);
         //进行短链接预热，并且将对应的空白Key删掉
         stringRedisTemplate.delete(String.format(GOTO_IS_NULL_KEY,requestParam.getFullShortUrl()));
 
-        stringRedisTemplate.opsForValue().set(String.format(GOTO_KEY,requestParam.getFullShortUrl()), shortLinkDO.getOriginUrl(),
-                LinkUtil.getLinkCacheValidDate(shortLinkDO.getValidDate()),TimeUnit.MILLISECONDS);
+        stringRedisTemplate.opsForValue().set(String.format(GOTO_KEY,requestParam.getFullShortUrl()), existingLink.getOriginUrl(),
+                LinkUtil.getLinkCacheValidDate(existingLink.getValidDate()),TimeUnit.MILLISECONDS);
     }
 
     @Transactional
