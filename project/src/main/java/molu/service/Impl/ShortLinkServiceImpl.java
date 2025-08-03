@@ -323,15 +323,22 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         //如果存在
                         .ifPresentOrElse(each->{
                             //TODO 用redis实现明显可以优化
-                            Long add = stringRedisTemplate.opsForSet().add("shortlink:stats:uv" + fullShortUrl, each);
+                            Long uvAdded = stringRedisTemplate.opsForSet().add("shortlink:stats:uv" + fullShortUrl, each);
                             //// 若Redis返回1表示新增，0表示已存在
-                            uvFirstFlag.set(add!=null&&add>0L);
+                            uvFirstFlag.set(uvAdded!=null&&uvAdded>0L);
                         },
                         // 不存在uv Cookie时的处理
                         addCookieTask);
             }else {
                 addCookieTask.run();
             }
+
+            //获取对应请求远程地址
+            String remoteAddr = LinkUtil.getIp(request);
+            //todo 和UV一样存在缓存问题
+            Long uipAdded = stringRedisTemplate.opsForSet().add("shortlink:stats:uip" + fullShortUrl, remoteAddr);
+            boolean uipFirstFlag =uipAdded!=null && uipAdded>0;
+
 
             if(StrUtil.isBlank(gid)){
                 ShortLinkGotoDO shortLinkGotoDO = shortLinkGoToMapper.selectOne(Wrappers.lambdaQuery(ShortLinkGotoDO.class)
@@ -348,7 +355,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             LinkAccessStatsDO build = LinkAccessStatsDO.builder()
                     .pv(1)
                     .uv(uvFirstFlag.get()?1:0)
-                    .uip(1)
+                    .uip(uipFirstFlag?1:0)
                     .hour(hour)
                     .weekday(value)
                     .fullShortUrl(fullShortUrl)
