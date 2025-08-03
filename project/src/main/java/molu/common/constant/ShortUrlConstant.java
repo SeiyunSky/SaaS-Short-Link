@@ -10,4 +10,9 @@ public class ShortUrlConstant {
      */
     public static final long DEFAULT_CACHE_VALID_TIME = 262656000L;
 
+    /**
+     * 高德IP解析地区接口
+     */
+    public static final String AMAP_REMOTE_URL="https://restapi.amap.com/v3/ip";
+
 }
