@@ -46,6 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static molu.common.constant.RedisKeyConstant.*;
 import static molu.common.constant.ShortUrlConstant.AMAP_REMOTE_URL;
@@ -68,6 +69,9 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final LinkLocaleStatsMapper linkLocaleStatsMapper;
     private final LinkOsStatsMapper linkOsStatsMapper;
     private final LinkBrowserStatsMapper linkBrowserStatsMapper;
+    private final LinkAccessLogsMapper linkAccessLogsMapper;
+    private final LinkDeviceStatsMapper linkDeviceStatsMapper;
+    private final LinkNetworkStatsMapper linkNetworkStatsMapper;
 
     @Value("${short-link.stats.locale.amap-key}")
     private String localeMapKey;
@@ -251,7 +255,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             return;
         }
 
-        // 没找到的话，加分布式锁，防止缓存击穿
+        // 布隆过滤器内存在的话，加分布式锁，防止缓存击穿
         RLock lock = redissonClient.getLock(String.format(LOCK_GOTO_KEY,fullShortUrl));
         lock.lock();
 
@@ -305,18 +309,19 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         AtomicBoolean uvFirstFlag = new AtomicBoolean();
         //获取请求内的所有cookie
         Cookie[] cookies = request.getCookies();
-
-
+        try {
+            AtomicReference<String> uv = new AtomicReference<>();
             Runnable addCookieTask = ()->{
                 //生成一个UUID作为用户标识，并存入Cookie中
-                String uv = UUID.fastUUID().toString();
-                Cookie cookie = new Cookie("uv",uv);
+                uv.set(UUID.fastUUID().toString());
+                Cookie cookie = new Cookie("uv",uv.get());
                 cookie.setMaxAge(60*60*24*30);
                 //动态设置Cookie的Path,使其匹配当前短链接的路径
                 cookie.setPath(StrUtil.sub(fullShortUrl,fullShortUrl.indexOf("/"),fullShortUrl.length()));
                 //将创建好的 Cookie 添加到 HTTP 响应中，使得浏览器能够接收并存储这个 Cookie
                 response.addCookie(cookie);
                 uvFirstFlag.set(Boolean.TRUE);
+                stringRedisTemplate.opsForSet().add("shortlink:status:uv:"+fullShortUrl,uv.get());
             };
             //做一层判断
             if(ArrayUtil.isNotEmpty(cookies)){
@@ -328,6 +333,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         //如果存在
                         .ifPresentOrElse(each->{
                             //TODO 用redis实现明显可以优化
+                            uv.set(each);
                             Long uvAdded = stringRedisTemplate.opsForSet().add("shortlink:stats:uv" + fullShortUrl, each);
                             //// 若Redis返回1表示新增，0表示已存在
                             uvFirstFlag.set(uvAdded!=null&&uvAdded>0L);
@@ -357,7 +363,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             Week week = DateUtil.dayOfWeekEnum(new Date());
             int value = week.getIso8601Value();
 
-            LinkAccessStatsDO build = LinkAccessStatsDO.builder()
+            LinkAccessStatsDO linkAccessStatsDO = LinkAccessStatsDO.builder()
                     .pv(1)
                     .uv(uvFirstFlag.get()?1:0)
                     .uip(uipFirstFlag?1:0)
@@ -367,7 +373,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .gid(gid)
                     .date(DateUtil.beginOfDay(new Date()))
                     .build();
-            linkAccessStatsMapper.shortLinkStats(build) ;
+            linkAccessStatsMapper.shortLinkStats(linkAccessStatsDO) ;
 
             //根据IP地址解析地区
             Map<String,Object> localeParamMap = new HashMap<>();
@@ -382,11 +388,11 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             JSONObject localeJsonObject = JSON.parseObject(localeRet);
             //获得里面的code，根据返回值判断是否成功
             String infoCode = localeJsonObject.getString("infocode");
-            LinkLocaleStatsDO build1;
+            LinkLocaleStatsDO linkLocaleStatsDO;
             if(StrUtil.isNotBlank(infoCode) && StrUtil.equals(infoCode,"10000")){
                 String province = localeJsonObject.getString("province");
                 boolean unknownFlag = StrUtil.isBlank(province);
-                build1 = LinkLocaleStatsDO.builder()
+                linkLocaleStatsDO = LinkLocaleStatsDO.builder()
                         .adcode(unknownFlag?"未知":localeJsonObject.getString("adcode"))
                         .cnt(1)
                         .city(unknownFlag?"未知":localeJsonObject.getString("city"))
@@ -396,17 +402,17 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .fullShortUrl(fullShortUrl)
                         .gid(gid)
                         .build();
-                linkLocaleStatsMapper.shortLinkLocaleStats(build1);
+                linkLocaleStatsMapper.shortLinkLocaleStats(linkLocaleStatsDO);
 
                 //获取os
-                LinkOsStatsDO build2 = LinkOsStatsDO.builder()
+                LinkOsStatsDO linkOsStatsDO = LinkOsStatsDO.builder()
                         .date(new Date())
                         .fullShortUrl(fullShortUrl)
                         .gid(gid)
                         .os(LinkUtil.getOs(request))
                         .cnt(1)
                         .build();
-                linkOsStatsMapper.shortLinkOsStats(build2);
+                linkOsStatsMapper.shortLinkOsStats(linkOsStatsDO);
                 //获取浏览器信息
                 LinkBrowserStatsDO linkBrowserStatsDO = LinkBrowserStatsDO.builder()
                         .browser(LinkUtil.getBrowser(((HttpServletRequest) request)))
@@ -416,7 +422,43 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .date(new Date())
                         .build();
                 linkBrowserStatsMapper.shortLinkBrowserStats(linkBrowserStatsDO);
+
+                //网络统计
+                LinkNetworkStatsDO linkNetworkStatsDO = LinkNetworkStatsDO.builder()
+                        .network(LinkUtil.getNetwork(((HttpServletRequest) request)))
+                        .cnt(1)
+                        .gid(gid)
+                        .fullShortUrl(fullShortUrl)
+                        .date(new Date())
+                        .build();
+                linkNetworkStatsMapper.shortLinkNetworkState(linkNetworkStatsDO);
+
+                //设备统计
+                LinkDeviceStatsDO linkDeviceStatsDO = LinkDeviceStatsDO.builder()
+                        .device(LinkUtil.getDevice(((HttpServletRequest) request)))
+                        .cnt(1)
+                        .gid(gid)
+                        .fullShortUrl(fullShortUrl)
+                        .date(new Date())
+                        .build();
+                linkDeviceStatsMapper.shortLinkDeviceState(linkDeviceStatsDO);
+                //访问日志监控实体
+                LinkAccessLogsDO linkAccessLogsDO = LinkAccessLogsDO.builder()
+                        .ip(remoteAddr)
+                        .browser(LinkUtil.getBrowser(((HttpServletRequest) request)))
+                        .os(LinkUtil.getOs(request))
+                        .gid(gid)
+                        .user(uv.get())
+                        .device(LinkUtil.getDevice(request))
+                        .locale(StrUtil.join("-","中国",linkLocaleStatsDO.getProvince(),linkLocaleStatsDO.getCity()))
+                        .network(LinkUtil.getNetwork(request))
+                        .fullShortUrl(fullShortUrl)
+                        .build();
+                linkAccessLogsMapper.insert(linkAccessLogsDO);
             }
+        }catch (Exception e){
+            throw new ClientException("短链接统计异常");
+        }
 
 
     }

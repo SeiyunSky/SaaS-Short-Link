@@ -112,4 +112,69 @@ public class LinkUtil {
             return "Unknown";
         }
     }
+
+    /**
+     * 获取用户访问设备
+     *
+     * @param request 请求
+     * @return 访问设备
+     */
+    public static String getDevice(HttpServletRequest request) {
+        String userAgent = request.getHeader("User-Agent");
+        if (userAgent.toLowerCase().contains("mobile")) {
+            return "Mobile";
+        }
+        return "PC";
+    }
+
+
+    /**
+     * 获取用户访问网络类型
+     * @param request HTTP请求对象
+     * @return 网络类型（Wi-Fi/4G/5G/Unknown）
+     */
+    public static String getNetwork(HttpServletRequest request) {
+        // 1. 优先从Header中获取网络信息（移动端常用）
+        String networkHeader = request.getHeader("X-Network-Type");
+        if (networkHeader != null) {
+            return normalizeNetworkType(networkHeader);
+        }
+
+        // 2. 通过User-Agent分析（适用于部分场景）
+        String userAgent = request.getHeader("User-Agent");
+        if (userAgent != null && userAgent.toLowerCase().contains("wifi")) {
+            return "WiFi";
+        }
+
+        // 3. 通过IP特征判断（需要IP库支持）
+        String ip = request.getRemoteAddr();
+        if (isMobileNetworkIP(ip)) {
+            return "Mobile";
+        }
+
+        // 默认返回未知
+        return "Unknown";
+    }
+
+    private static String normalizeNetworkType(String rawType) {
+        if (rawType == null) return "Unknown";
+
+        String lowerType = rawType.toLowerCase();
+        if (lowerType.contains("wifi")) {
+            return "WiFi";
+        } else if (lowerType.contains("5g")) {
+            return "5G";
+        } else if (lowerType.contains("4g")) {
+            return "4G";
+        } else if (lowerType.contains("3g")) {
+            return "3G";
+        } else if (lowerType.contains("mobile")) {
+            return "Mobile";
+        }
+        return rawType;
+    }
+
+    private static boolean isMobileNetworkIP(String ip) {
+        return ip.startsWith("10.") || ip.startsWith("192.168.");
+    }
 }
