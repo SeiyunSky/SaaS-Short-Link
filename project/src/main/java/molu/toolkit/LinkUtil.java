@@ -3,7 +3,6 @@ package molu.toolkit;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.Data;
 
 import java.util.Date;
 import java.util.Optional;
@@ -48,5 +47,44 @@ public class LinkUtil {
         }
 
         return ipAddress;
+    }
+
+    /**
+     * 从User-Agent字符串中识别操作系统
+     * @param userAgent 浏览器User-Agent
+     * @return 操作系统名称
+     */
+    public static String getOs(String userAgent) {
+        if (userAgent == null || userAgent.isEmpty()) {
+            return "Unknown";
+        }
+
+        userAgent = userAgent.toLowerCase();
+
+        if (userAgent.contains("windows")) {
+            return "Windows";
+        } else if (userAgent.contains("mac os") || userAgent.contains("macos")) {
+            return "Mac OS";
+        } else if (userAgent.contains("linux")) {
+            return "Linux";
+        } else if (userAgent.contains("android")) {
+            return "Android";
+        } else if (userAgent.contains("iphone") || userAgent.contains("ipad") || userAgent.contains("ios")) {
+            return "iOS";
+        } else if (userAgent.contains("unix")) {
+            return "Unix";
+        } else {
+            return "Unknown";
+        }
+    }
+
+    /**
+     * 从HttpServletRequest中获取操作系统信息
+     * @param request HttpServletRequest对象
+     * @return 操作系统名称
+     */
+    public static String getOs(HttpServletRequest request) {
+        String userAgent = request.getHeader("User-Agent");
+        return getOs(userAgent);
     }
 }

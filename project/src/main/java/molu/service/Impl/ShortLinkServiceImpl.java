@@ -22,14 +22,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import molu.common.convention.exception.ClientException;
 import molu.common.convention.exception.ServiceException;
-import molu.dao.entity.LinkAccessStatsDO;
-import molu.dao.entity.LinkLocaleStatsDO;
-import molu.dao.entity.ShortLinkDO;
-import molu.dao.entity.ShortLinkGotoDO;
-import molu.dao.mapper.LinkAccessStatsMapper;
-import molu.dao.mapper.LinkLocaleStatsMapper;
-import molu.dao.mapper.ShortLinkGotoMapper;
-import molu.dao.mapper.ShortLinkMapper;
+import molu.dao.entity.*;
+import molu.dao.mapper.*;
 import lombok.extern.slf4j.Slf4j;
 import molu.dto.req.ShortLinkCreateReqDTO;
 import molu.dto.req.ShortLinkPageReqDTO;
@@ -72,6 +66,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final RedissonClient redissonClient;
     private final LinkAccessStatsMapper linkAccessStatsMapper;
     private final LinkLocaleStatsMapper linkLocaleStatsMapper;
+    private final LinkOsStatsMapper linkOsStatsMapper;
 
     @Value("${short-link.stats.locale.amap-key}")
     private String localeMapKey;
@@ -401,6 +396,16 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .gid(gid)
                         .build();
                 linkLocaleStatsMapper.shortLinkLocaleStats(build1);
+
+                //获取os
+                LinkOsStatsDO build2 = LinkOsStatsDO.builder()
+                        .date(new Date())
+                        .fullShortUrl(fullShortUrl)
+                        .gid(gid)
+                        .os(LinkUtil.getOs(request))
+                        .cnt(1)
+                        .build();
+                linkOsStatsMapper.shortLinkOsStats(build2);
             }
 
 
