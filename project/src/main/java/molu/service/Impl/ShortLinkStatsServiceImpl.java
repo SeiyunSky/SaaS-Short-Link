@@ -234,27 +234,34 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
         LambdaQueryWrapper<LinkAccessLogsDO> queryWrapper = Wrappers.lambdaQuery(LinkAccessLogsDO.class)
                 .eq(LinkAccessLogsDO::getGid, requestParam.getGid())
                 .eq(LinkAccessLogsDO::getFullShortUrl, requestParam.getFullShortUrl())
-                .eq(LinkAccessLogsDO::getDelFlag, 0);
+                .between(LinkAccessLogsDO::getCreateTime,requestParam.getStartDate(),requestParam.getEndDate())
+                .eq(LinkAccessLogsDO::getDelFlag, 0)
+                .orderByDesc(LinkAccessLogsDO::getCreateTime);
+
         IPage<LinkAccessLogsDO> res = linkAccessLogsMapper
                 .selectPage(requestParam, queryWrapper);
-
         IPage<ShortLinkStatsAccessRecordRespDTO> actualRes = res.convert(each->BeanUtil.toBean(each, ShortLinkStatsAccessRecordRespDTO.class));
+
         List<String> userAccessLogsList = actualRes.getRecords().stream()
                 .map(ShortLinkStatsAccessRecordRespDTO::getUser)
                 .collect(Collectors.toList());
         List<Map<String,Object>> uvTypeList = linkAccessLogsMapper
-                .selectUvTypeByUsers(requestParam,userAccessLogsList);
+                .selectUvTypeByUsers(
+                        requestParam.getGid(),
+                        requestParam.getFullShortUrl(),
+                        requestParam.getStartDate(),
+                        requestParam.getEndDate(),
+                        userAccessLogsList);
 
         actualRes.getRecords().forEach(each->{
                      String uvType = uvTypeList.stream()
                         .filter(item-> Objects.equals(each.getUser(),item.get("user")))
                         .findFirst()
-                        .map(item -> item.get("user"))
+                        .map(item -> item.get("uvType"))
                         .map(Objects::toString)
                         .orElse("旧访客");
                      each.setUvType(uvType);
         });
-
         return actualRes;
     }
 }

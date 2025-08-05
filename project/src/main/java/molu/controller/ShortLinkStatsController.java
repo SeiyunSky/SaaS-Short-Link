@@ -31,8 +31,9 @@ public class ShortLinkStatsController {
     /**
      * 访问单个短链接指定时间内访问记录监控数据
      */
-    @GetMapping("/api/short-link/v1/stats/access-record")
+    @GetMapping("/api/short-link/v1/access-record")
     public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> shortLinkStats(ShortLinkStatsAccessRecordReqDTO requestParam) {
+        requestParam.getEndDate();
         return Results.success(shortLinkStatsService.shortLinkStatsAccessRecord(requestParam));
     }
 }

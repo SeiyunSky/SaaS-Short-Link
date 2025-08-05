@@ -54,7 +54,6 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
 
     /**
      * 获取用户信息是新老访客
-     * @param requestParam 请求
      * @param userAccessLogsList 请求
      * @return 返回
      */
@@ -70,15 +69,17 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
             "WHERE " +
             "    full_short_url = #{fullShortUrl} " +
             "    AND gid = #{gid} " +
+            "    <if test='userAccessLogsList != null and userAccessLogsList.size() > 0'> " +
             "    AND user IN " +
             "    <foreach item='item' index='index' collection='userAccessLogsList' open='(' separator=',' close=')'> " +
             "        #{item} " +
             "    </foreach> " +
+            "    </if> " +
             "GROUP BY " +
             "    user;" +
-            "    </script>"
+            "</script>"
     )
-    List<Map<String, Object>> selectUvTypeByUsers(@Param("param")ShortLinkStatsAccessRecordReqDTO requestParam, @Param("userAccessLogsList")List<String> userAccessLogsList);
+    List<Map<String, Object>> selectUvTypeByUsers(@Param("gid")String gid, @Param("fullShortUrl")String fullShortUrl,@Param("startDate") String startDate,@Param("endDate") String endDate,@Param("userAccessLogsList") List<String> userAccessLogsList);
 }
 
 
