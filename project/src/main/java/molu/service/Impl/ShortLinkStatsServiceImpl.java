@@ -231,6 +231,7 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
     @Override
     public IPage<ShortLinkStatsAccessRecordRespDTO> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam) {
 
+        //获取当前链接的访问记录
         LambdaQueryWrapper<LinkAccessLogsDO> queryWrapper = Wrappers.lambdaQuery(LinkAccessLogsDO.class)
                 .eq(LinkAccessLogsDO::getGid, requestParam.getGid())
                 .eq(LinkAccessLogsDO::getFullShortUrl, requestParam.getFullShortUrl())
@@ -242,9 +243,18 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
                 .selectPage(requestParam, queryWrapper);
         IPage<ShortLinkStatsAccessRecordRespDTO> actualRes = res.convert(each->BeanUtil.toBean(each, ShortLinkStatsAccessRecordRespDTO.class));
 
+        // 如果没有记录，直接返回空的分页结果，不再执行后续操作
+        if (actualRes.getRecords().isEmpty()) {
+            return actualRes;
+        }
+
+
         List<String> userAccessLogsList = actualRes.getRecords().stream()
                 .map(ShortLinkStatsAccessRecordRespDTO::getUser)
+                .distinct()  //去重防止多次查询同一个人
                 .collect(Collectors.toList());
+
+
         List<Map<String,Object>> uvTypeList = linkAccessLogsMapper
                 .selectUvTypeByUsers(
                         requestParam.getGid(),
@@ -253,14 +263,15 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
                         requestParam.getEndDate(),
                         userAccessLogsList);
 
+        Map<String, Object> userToUvTypeMap = uvTypeList.stream()
+                .collect(Collectors.toMap(
+                                (Map<String, Object> item) -> (String) item.get("user"),
+                                (Map<String, Object> item) ->  item.get("uvType"))
+                );
+
         actualRes.getRecords().forEach(each->{
-                     String uvType = uvTypeList.stream()
-                        .filter(item-> Objects.equals(each.getUser(),item.get("user")))
-                        .findFirst()
-                        .map(item -> item.get("uvType"))
-                        .map(Objects::toString)
-                        .orElse("旧访客");
-                     each.setUvType(uvType);
+            String uvType = userToUvTypeMap.getOrDefault(each.getUser(), "旧访客").toString();
+            each.setUvType(uvType);
         });
         return actualRes;
     }
