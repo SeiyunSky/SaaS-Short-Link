@@ -2,12 +2,14 @@ package molu.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import molu.dao.entity.LinkAccessLogsDO;
+import molu.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import molu.dto.req.ShortLinkStatsReqDTO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
 
@@ -50,4 +52,33 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
             ") AS user_counts;")
     HashMap<String, Object> findUvTypeCntByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);
 
+    /**
+     * 获取用户信息是新老访客
+     * @param requestParam 请求
+     * @param userAccessLogsList 请求
+     * @return 返回
+     */
+    @Select("<script> " +
+            "SELECT " +
+            "    user, " +
+            "    CASE " +
+            "        WHEN MIN(create_time) BETWEEN #{startDate} AND #{endDate} THEN '新访客' " +
+            "        ELSE '老访客' " +
+            "    END AS uvType " +
+            "FROM " +
+            "    t_link_access_logs " +
+            "WHERE " +
+            "    full_short_url = #{fullShortUrl} " +
+            "    AND gid = #{gid} " +
+            "    AND user IN " +
+            "    <foreach item='item' index='index' collection='userAccessLogsList' open='(' separator=',' close=')'> " +
+            "        #{item} " +
+            "    </foreach> " +
+            "GROUP BY " +
+            "    user;" +
+            "    </script>"
+    )
+    List<Map<String, Object>> selectUvTypeByUsers(@Param("param")ShortLinkStatsAccessRecordReqDTO requestParam, @Param("userAccessLogsList")List<String> userAccessLogsList);
 }
+
+

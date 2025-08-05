@@ -1,37 +1,37 @@
 package molu.controller;
+
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import molu.common.convention.result.Result;
 import molu.common.convention.result.Results;
-import molu.dto.req.ShortLinkStatsAccessRecordReqDTO;
-import molu.dto.req.ShortLinkStatsReqDTO;
-import molu.dto.resp.ShortLinkStatsAccessRecordRespDTO;
-import molu.dto.resp.ShortLinkStatsRespDTO;
-import molu.service.ShortLinkStatsService;
+import molu.remote.dto.ShortLinkRemoteService;
+import molu.remote.dto.ShortLinkStatsService;
+import molu.remote.dto.req.ShortLinkStatsAccessRecordReqDTO;
+import molu.remote.dto.req.ShortLinkStatsReqDTO;
+import molu.remote.dto.resp.ShortLinkStatsRespDTO;
+import molu.remote.dto.resp.ShortLinkStatsAccessRecordRespDTO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * 短链接监控控制层
- */
 @RestController
 @RequiredArgsConstructor
 public class ShortLinkStatsController {
 
-    private final ShortLinkStatsService shortLinkStatsService;
+    ShortLinkStatsService shortLinkStatsService = new ShortLinkStatsService(){};
+    ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService(){};
 
     /**
      * 访问单个短链接指定时间内监控数据
      */
-    @GetMapping("/api/short-link/v1/stats")
+    @GetMapping("/api/short-link/admin/v1/stats")
     public Result<ShortLinkStatsRespDTO> shortLinkStats(ShortLinkStatsReqDTO requestParam) {
-        return Results.success(shortLinkStatsService.oneShortLinkStats(requestParam));
+        return shortLinkRemoteService.oneShortLinkStats(requestParam);
     }
 
     /**
      * 访问单个短链接指定时间内访问记录监控数据
      */
-    @GetMapping("/api/short-link/v1/stats/access-record")
+    @GetMapping("/api/short-link/admin/v1/stats/access-record")
     public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> shortLinkStats(ShortLinkStatsAccessRecordReqDTO requestParam) {
         return Results.success(shortLinkStatsService.shortLinkStatsAccessRecord(requestParam));
     }

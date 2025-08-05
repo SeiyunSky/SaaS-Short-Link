@@ -24,7 +24,7 @@ public class ShortLinkController {
      * 创建短链接
      * @return
      */
-    @PostMapping("/api/shortlink/admin/v1/create")
+    @PostMapping("/api/short-link/admin/v1/create")
     public Result<ShortLinkCreateRespDTO> createShortLink(@RequestBody ShortLinkCreateReqDTO requestParam){
         return shortLinkRemoteService.createLink(requestParam);
     }
@@ -34,7 +34,7 @@ public class ShortLinkController {
      * @param requestParam
      * @return
      */
-    @GetMapping("/api/shortlink/admin/v1/page")
+    @GetMapping("/api/short-link/admin/v1/page")
     public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam){
         return shortLinkRemoteService.pageShortLink(requestParam);
     }
@@ -44,7 +44,7 @@ public class ShortLinkController {
      * @param requestParam
      * @return
      */
-    @PutMapping("/api/shortlink/admin/v1/update")
+    @PutMapping("/api/short-link/admin/v1/update")
     public Result<Void> updateShortLink(@RequestBody ShortLinkUpdateReqDTO requestParam){
         shortLinkRemoteService.update(requestParam);
         return Results.success();
