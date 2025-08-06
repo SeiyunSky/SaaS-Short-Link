@@ -10,6 +10,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import molu.common.convention.exception.ClientException;
 import molu.common.enums.UserErrorCodeEnum;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @RequiredArgsConstructor
 public class UserTransmitFilter implements Filter {
 
@@ -33,7 +35,7 @@ public class UserTransmitFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String requestURI = httpServletRequest.getRequestURI();
 
-        if(!IGNORE_URL.contains(requestURI)){
+        if(IGNORE_URL.stream().noneMatch(requestURI::startsWith)){
             String method = httpServletRequest.getMethod();
             if (!(Objects.equals(requestURI, "/api/shortlink/admin/v1/user")&&Objects.equals("POST", method))) {
                 String username = httpServletRequest.getHeader("username");
@@ -48,6 +50,7 @@ public class UserTransmitFilter implements Filter {
                     userInfoJsonStr = stringRedisTemplate.opsForHash().get("login_" + username, token);
                     if(userInfoJsonStr == null){
                         //todo 全局异常拦截器拦截不到这里
+                        log.error("Failed to verify user token from Redis");
                         throw new ClientException(UserErrorCodeEnum.USER_TOKEN_Fail);
                     }
                 }catch (Exception e){
