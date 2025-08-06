@@ -62,4 +62,35 @@ public class ShortLinkPageRespDTO extends BaseDO {
      * 描述
      */
     private String describe;
+
+    /**
+     * 历史访问次数
+     */
+    private Integer totalPv;
+
+    /**
+     * 今日访问次数
+     */
+    private Integer todayPv;
+
+    /**
+     * 历史访问用户
+     */
+    private Integer totalUv;
+
+    /**
+     * 今日访问用户
+     */
+    private Integer todayUv;
+
+    /**
+     * 历史访问IP
+     */
+    private Integer totalUip;
+
+    /**
+     * 今日访问IP
+     */
+    private Integer todayUip;
+
 }

@@ -89,4 +89,17 @@ public class ShortLinkDO extends BaseDO {
     @TableField("`describe`")
     private String describe;
 
+    /**
+     * 历史访问次数
+     */
+    private Integer totalUv;
+
+    /**
+     * 历史访问人数
+     */
+    private Integer totalPv;
+    /**
+     * 历史访问IP
+     */
+    private Integer totalUip;
 }
