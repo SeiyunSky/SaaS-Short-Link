@@ -100,6 +100,9 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 .validDateType(requestParam.getValidDateType())
                 .describe(requestParam.getDescribe())
                 .shortUri(ret)
+                .totalPv(0)
+                .totalPv(0)
+                .totalUip(0)
                 .enableStatus(0)
                 .fullShortUrl(fullshortLink)
                 .build();
@@ -227,6 +230,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
      * @param request 请求
      * @param response 响应
      */
+    @Transactional
     @SneakyThrows
     @Override
     public void restoreUrl(String shortUri, HttpServletRequest request, HttpServletResponse response) {
@@ -455,12 +459,12 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .fullShortUrl(fullShortUrl)
                         .build();
                 linkAccessLogsMapper.insert(linkAccessLogsDO);
+
+                shortLinkMapper.incrementStats(gid,fullShortUrl,1,uvFirstFlag.get()?1:0,uipFirstFlag?1:0);
             }
         }catch (Exception e){
             throw new ClientException("短链接统计异常");
         }
-
-
     }
 
     /**

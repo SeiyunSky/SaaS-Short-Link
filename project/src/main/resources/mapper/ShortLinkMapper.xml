@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="molu.dao.mapper.ShortLinkMapper">
+    <update id="incrementStats">
+        update
+        t_link
+        set
+        total_pv = total_pv+#{totalPv},
+        total_uv = total_uv+#{totalUv},
+        total_uip = total_uip+#{totalUip}
+        where
+        gid = #{gid} and full_short_url = #{fullShortUrl}
+    </update>
 
     <select id="groupShortLinkCount" parameterType="java.util.List" resultType="molu.dto.resp.ShortLinkCountQueryRespDTO">
         SELECT gid,COUNT(*) AS count
