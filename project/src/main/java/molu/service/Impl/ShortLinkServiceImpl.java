@@ -72,6 +72,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final LinkAccessLogsMapper linkAccessLogsMapper;
     private final LinkDeviceStatsMapper linkDeviceStatsMapper;
     private final LinkNetworkStatsMapper linkNetworkStatsMapper;
+    private final LinkStatsTodayMapper linkStatsTodayMapper;
 
     @Value("${short-link.stats.locale.amap-key}")
     private String localeMapKey;
@@ -313,7 +314,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         AtomicBoolean uvFirstFlag = new AtomicBoolean();
         //获取请求内的所有cookie
         Cookie[] cookies = request.getCookies();
-        try {
+    //    try {
             AtomicReference<String> uv = new AtomicReference<>();
             Runnable addCookieTask = ()->{
                 //生成一个UUID作为用户标识，并存入Cookie中
@@ -459,12 +460,21 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .fullShortUrl(fullShortUrl)
                         .build();
                 linkAccessLogsMapper.insert(linkAccessLogsDO);
-
                 shortLinkMapper.incrementStats(gid,fullShortUrl,1,uvFirstFlag.get()?1:0,uipFirstFlag?1:0);
+
+                LinkStatsTodayDO linkStatsTodayDO = LinkStatsTodayDO.builder()
+                        .gid(gid)
+                        .fullShortUrl(fullShortUrl)
+                        .date(new Date())
+                        .todayPv(1)
+                        .todayUv(uvFirstFlag.get()?1:0)
+                        .todayUip(uipFirstFlag?1:0)
+                        .build();
+                linkStatsTodayMapper.shortLinkTodayStats(linkStatsTodayDO);
             }
-        }catch (Exception e){
+       /* }catch (Exception e){
             throw new ClientException("短链接统计异常");
-        }
+        }*/
     }
 
     /**
