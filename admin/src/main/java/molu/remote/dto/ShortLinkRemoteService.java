@@ -105,6 +105,7 @@ public interface ShortLinkRemoteService {
     default Result<IPage<ShortLinkPageRespDTO>> pageShortLinkRecycleOne(ShortLinkRecycleBinPageReqDTO requestParam){
         Map<String,Object> map = new HashMap<>();
         map.put("gidList",requestParam.getGidList());
+        map.put("orderTag", requestParam.getOrderTag());
         map.put("current",requestParam.getCurrent());
         map.put("size",requestParam.getSize());
         String retStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/recyclebin/page",map);

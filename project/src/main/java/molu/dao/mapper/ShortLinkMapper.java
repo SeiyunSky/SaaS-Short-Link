@@ -1,7 +1,9 @@
 package molu.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import molu.dao.entity.ShortLinkDO;
+import molu.dto.req.ShortLinkPageReqDTO;
 import molu.dto.resp.ShortLinkCountQueryRespDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -25,4 +27,9 @@ public interface ShortLinkMapper extends BaseMapper<ShortLinkDO> {
      * 访问统计自增
      */
     void incrementStats(@Param("gid") String gid,@Param("fullShortUrl") String fullShortUrl,@Param("totalPv") Integer totalPv, @Param("totalUv") Integer totalUv,@Param("totalUip") Integer totalUip);
+
+    /**
+     * 分页统计短链接
+     */
+    IPage<ShortLinkDO> pageLink(ShortLinkPageReqDTO requestParam);
 }
