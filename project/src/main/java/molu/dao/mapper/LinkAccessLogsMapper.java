@@ -3,6 +3,7 @@ package molu.dao.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import molu.dao.entity.LinkAccessLogsDO;
 import molu.dao.entity.LinkAccessStatsDO;
+import molu.dto.req.ShortLinkGroupStatsReqDTO;
 import molu.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import molu.dto.req.ShortLinkStatsReqDTO;
 import org.apache.ibatis.annotations.Param;
@@ -95,6 +96,40 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
             "group by " +
             "    full_short_url,gid;")
     LinkAccessStatsDO findPvUvAndUip(@Param("param") ShortLinkStatsReqDTO requestParam);
+
+    /**
+     * 根据分组获取指定日期内高频访问IP数据
+     */
+    @Select("SELECT " +
+            "    ip, " +
+            "    COUNT(ip) AS count " +
+            "FROM " +
+            "    t_link_access_logs " +
+            "WHERE " +
+            "    gid = #{param.gid} " +
+            "    AND create_time BETWEEN #{param.startDate} and #{param.endDate} " +
+            "GROUP BY " +
+            "    gid, ip " +
+            "ORDER BY " +
+            "    count DESC " +
+            "LIMIT 5;")
+    List<HashMap<String, Object>> listTopIpByGroup(@Param("param") ShortLinkGroupStatsReqDTO requestParam);
+
+    /**
+     * 根据分组获取指定日期内PV、UV、UIP数据
+     */
+    @Select("SELECT " +
+            "    COUNT(user) AS pv, " +
+            "    COUNT(DISTINCT user) AS uv, " +
+            "    COUNT(DISTINCT ip) AS uip " +
+            "FROM " +
+            "    t_link_access_logs " +
+            "WHERE " +
+            "    gid = #{param.gid} " +
+            "    AND create_time BETWEEN #{param.startDate} and #{param.endDate} " +
+            "GROUP BY " +
+            "    gid;")
+    LinkAccessStatsDO findPvUvUidStatsByGroup(@Param("param") ShortLinkGroupStatsReqDTO requestParam);
 
 }
 
