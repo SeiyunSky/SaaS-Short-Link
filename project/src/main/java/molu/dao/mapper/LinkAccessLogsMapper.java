@@ -2,6 +2,7 @@ package molu.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import molu.dao.entity.LinkAccessLogsDO;
+import molu.dao.entity.LinkAccessStatsDO;
 import molu.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import molu.dto.req.ShortLinkStatsReqDTO;
 import org.apache.ibatis.annotations.Param;
@@ -80,6 +81,21 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
             "</script>"
     )
     List<Map<String, Object>> selectUvTypeByUsers(@Param("gid")String gid, @Param("fullShortUrl")String fullShortUrl,@Param("startDate") String startDate,@Param("endDate") String endDate,@Param("userAccessLogsList") List<String> userAccessLogsList);
+
+    @Select("SELECT " +
+            "full_short_url,gid,count(user) as pv," +
+            "count(distinct user) as uv," +
+            "count(distinct ip) as uip " +
+            "FROM " +
+            "    t_link_access_logs " +
+            "WHERE" +
+            "    full_short_url = #{param.fullShortUrl} " +
+            "    AND gid = #{param.gid} " +
+            "    AND create_time BETWEEN #{param.startDate} and #{param.endDate} "+
+            "group by " +
+            "    full_short_url,gid;")
+    LinkAccessStatsDO findPvUvAndUip(@Param("param") ShortLinkStatsReqDTO requestParam);
+
 }
 
 
