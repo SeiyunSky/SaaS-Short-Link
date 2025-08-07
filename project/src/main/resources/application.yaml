@@ -25,6 +25,8 @@ mybatis-plus:
        logic-not-delete-value: 0
        id-type: auto
 short-link:
+  domain:
+    default: 127.0.0.1:8001
   stats:
    locale:
      amap-key: "ea90870fdf4982f9111b61d594a887fd"

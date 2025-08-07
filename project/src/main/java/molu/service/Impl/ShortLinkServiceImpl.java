@@ -77,6 +77,9 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     @Value("${short-link.stats.locale.amap-key}")
     private String localeMapKey;
 
+    @Value("${short-link.domain.default}")
+    private String defaultDomain;
+
     /**
      * 创建短链接
      * @param requestParam 创建
@@ -88,12 +91,12 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         //创建短链接
         String ret = generateSuffix(requestParam);
         String fullshortLink = StrBuilder
-                .create(requestParam.getDomain())
+                .create(defaultDomain)
                 .append("/")
                 .append(ret)
                 .toString();
         ShortLinkDO shortLinkDO =ShortLinkDO.builder()
-                .domain(requestParam.getDomain())
+                .domain(defaultDomain)
                 .originUrl(requestParam.getOriginUrl())
                 .gid(requestParam.getGid())
                 .createdType(requestParam.getCreatedType())
@@ -229,9 +232,8 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     @SneakyThrows
     @Override
     public void restoreUrl(String shortUri, HttpServletRequest request, HttpServletResponse response) {
-        //TODO 这里的拼接是我为了能让程序跑起来临时根据当前域名拼接的，实际上还需要做改动
-        //TODO 原则上应该是域名不含http，domain里面存一个，拼接的数据应该符合domain+短链接
         String fullShortUrl = request.getServerName()+":"+request.getServerPort()+"/"+shortUri;
+
         //在Redis缓存里查询数据
         String originLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_KEY,fullShortUrl));
 
