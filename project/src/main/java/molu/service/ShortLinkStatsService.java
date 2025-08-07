@@ -1,6 +1,7 @@
 package molu.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import molu.dto.req.ShortLinkGroupStatsAccessRecordReqDTO;
 import molu.dto.req.ShortLinkGroupStatsReqDTO;
 import molu.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import molu.dto.req.ShortLinkStatsReqDTO;
@@ -20,4 +21,6 @@ public interface ShortLinkStatsService {
     IPage<ShortLinkStatsAccessRecordRespDTO> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam);
 
     ShortLinkStatsRespDTO groupShortLinkStats(ShortLinkGroupStatsReqDTO requestParam);
+
+    IPage<ShortLinkStatsAccessRecordRespDTO> groupShortLinkStatsAccessRecord(ShortLinkGroupStatsAccessRecordReqDTO requestParam);
 }

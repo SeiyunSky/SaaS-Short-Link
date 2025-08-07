@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import molu.common.convention.result.Result;
 import molu.remote.dto.ShortLinkRemoteService;
+import molu.remote.dto.req.ShortLinkGroupStatsAccessRecordReqDTO;
 import molu.remote.dto.req.ShortLinkGroupStatsReqDTO;
 import molu.remote.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import molu.remote.dto.req.ShortLinkStatsReqDTO;
@@ -43,5 +44,13 @@ public class ShortLinkStatsController {
     @GetMapping("/api/short-link/admin/v1/stats/access-record")
     public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> shortLinkStats(@RequestBody ShortLinkStatsAccessRecordReqDTO requestParam) {
         return shortLinkRemoteService.shortLinkStatsAccessRecord(requestParam);
+    }
+
+    /**
+     * 访问分组短链接指定时间内访问记录监控数据
+     */
+    @GetMapping("/api/short-link/admin/v1/stats/access-record/group")
+    public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> groupShortLinkStats(@RequestBody ShortLinkGroupStatsAccessRecordReqDTO requestParam) {
+        return shortLinkRemoteService.groupShortLinkStatsAccessRecord(requestParam);
     }
 }

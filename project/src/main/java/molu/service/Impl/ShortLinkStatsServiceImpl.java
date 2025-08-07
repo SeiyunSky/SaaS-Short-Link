@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import molu.dao.entity.*;
 import molu.dao.mapper.*;
+import molu.dto.req.ShortLinkGroupStatsAccessRecordReqDTO;
 import molu.dto.req.ShortLinkGroupStatsReqDTO;
 import molu.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import molu.dto.req.ShortLinkStatsReqDTO;
@@ -447,6 +448,54 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
                 .deviceStats(deviceStats)
                 .networkStats(networkStats)
                 .build();
+    }
+
+    @Override
+    public IPage<ShortLinkStatsAccessRecordRespDTO> groupShortLinkStatsAccessRecord(ShortLinkGroupStatsAccessRecordReqDTO requestParam) {
+        LocalDate endDate = LocalDate.parse(requestParam.getEndDate());
+        LocalDate nextDayOfEndDate = endDate.plusDays(1);
+
+        //获取当前链接的访问记录
+        LambdaQueryWrapper<LinkAccessLogsDO> queryWrapper = Wrappers.lambdaQuery(LinkAccessLogsDO.class)
+                .eq(LinkAccessLogsDO::getGid, requestParam.getGid())
+                .between(LinkAccessLogsDO::getCreateTime,requestParam.getStartDate(),nextDayOfEndDate)
+                .eq(LinkAccessLogsDO::getDelFlag, 0)
+                .orderByDesc(LinkAccessLogsDO::getCreateTime);
+
+        IPage<LinkAccessLogsDO> res = linkAccessLogsMapper
+                .selectPage(requestParam, queryWrapper);
+        IPage<ShortLinkStatsAccessRecordRespDTO> actualRes = res.convert(each->BeanUtil.toBean(each, ShortLinkStatsAccessRecordRespDTO.class));
+
+        // 如果没有记录，直接返回空的分页结果，不再执行后续操作
+        if (actualRes.getRecords().isEmpty()) {
+            return actualRes;
+        }
+
+
+        List<String> userAccessLogsList = actualRes.getRecords().stream()
+                .map(ShortLinkStatsAccessRecordRespDTO::getUser)
+                .distinct()  //去重防止多次查询同一个人
+                .collect(Collectors.toList());
+
+
+        List<Map<String,Object>> uvTypeList = linkAccessLogsMapper
+                .selectGroupUvTypeByUsers(
+                        requestParam.getGid(),
+                        requestParam.getStartDate(),
+                        requestParam.getEndDate(),
+                        userAccessLogsList);
+
+        Map<String, Object> userToUvTypeMap = uvTypeList.stream()
+                .collect(Collectors.toMap(
+                        (Map<String, Object> item) -> (String) item.get("user"),
+                        (Map<String, Object> item) ->  item.get("uvType"))
+                );
+
+        actualRes.getRecords().forEach(each->{
+            String uvType = userToUvTypeMap.getOrDefault(each.getUser(), "旧访客").toString();
+            each.setUvType(uvType);
+        });
+        return actualRes;
     }
 
 }
