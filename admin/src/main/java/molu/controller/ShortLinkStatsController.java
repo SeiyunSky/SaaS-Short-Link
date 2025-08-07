@@ -11,6 +11,7 @@ import molu.remote.dto.req.ShortLinkStatsReqDTO;
 import molu.remote.dto.resp.ShortLinkStatsRespDTO;
 import molu.remote.dto.resp.ShortLinkStatsAccessRecordRespDTO;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +25,7 @@ public class ShortLinkStatsController {
      * 访问单个短链接指定时间内监控数据
      */
     @GetMapping("/api/short-link/admin/v1/stats")
-    public Result<ShortLinkStatsRespDTO> shortLinkStats(@RequestBody ShortLinkStatsReqDTO requestParam) {
+    public Result<ShortLinkStatsRespDTO> shortLinkStats(@ModelAttribute ShortLinkStatsReqDTO requestParam) {
         return shortLinkRemoteService.oneShortLinkStats(requestParam);
     }
 
@@ -33,7 +34,7 @@ public class ShortLinkStatsController {
      * 访问分组短链接指定时间内监控数据
      */
     @GetMapping("/api/short-link/admin/v1/stats/group")
-    public Result<ShortLinkStatsRespDTO> groupShortLinkStats(@RequestBody ShortLinkGroupStatsReqDTO requestParam) {
+    public Result<ShortLinkStatsRespDTO> groupShortLinkStats(@ModelAttribute ShortLinkGroupStatsReqDTO requestParam) {
         return shortLinkRemoteService.groupShortLinkStats(requestParam);
     }
 
@@ -42,7 +43,7 @@ public class ShortLinkStatsController {
      * 访问单个短链接指定时间内访问记录监控数据
      */
     @GetMapping("/api/short-link/admin/v1/stats/access-record")
-    public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> shortLinkStats(@RequestBody ShortLinkStatsAccessRecordReqDTO requestParam) {
+    public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> shortLinkStats(@ModelAttribute ShortLinkStatsAccessRecordReqDTO requestParam) {
         return shortLinkRemoteService.shortLinkStatsAccessRecord(requestParam);
     }
 
@@ -50,7 +51,7 @@ public class ShortLinkStatsController {
      * 访问分组短链接指定时间内访问记录监控数据
      */
     @GetMapping("/api/short-link/admin/v1/stats/access-record/group")
-    public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> groupShortLinkStats(@RequestBody ShortLinkGroupStatsAccessRecordReqDTO requestParam) {
+    public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> groupShortLinkStats(@ModelAttribute ShortLinkGroupStatsAccessRecordReqDTO requestParam) {
         return shortLinkRemoteService.groupShortLinkStatsAccessRecord(requestParam);
     }
 }

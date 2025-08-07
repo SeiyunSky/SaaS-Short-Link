@@ -239,14 +239,11 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
     @Override
     public IPage<ShortLinkStatsAccessRecordRespDTO> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam) {
 
-        LocalDate endDate = LocalDate.parse(requestParam.getEndDate());
-        LocalDate nextDayOfEndDate = endDate.plusDays(1);
-
         //获取当前链接的访问记录
         LambdaQueryWrapper<LinkAccessLogsDO> queryWrapper = Wrappers.lambdaQuery(LinkAccessLogsDO.class)
                 .eq(LinkAccessLogsDO::getGid, requestParam.getGid())
                 .eq(LinkAccessLogsDO::getFullShortUrl, requestParam.getFullShortUrl())
-                .between(LinkAccessLogsDO::getCreateTime,requestParam.getStartDate(),nextDayOfEndDate)
+                .between(LinkAccessLogsDO::getCreateTime,requestParam.getStartDate(),requestParam.getEndDate())
                 .eq(LinkAccessLogsDO::getDelFlag, 0)
                 .orderByDesc(LinkAccessLogsDO::getCreateTime);
 
