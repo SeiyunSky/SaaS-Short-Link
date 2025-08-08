@@ -41,4 +41,10 @@ public class ShortLinkUpdateReqDTO extends BaseDO {
      * 描述
      */
     private String describe;
+
+    /**
+     * 原始分组标识
+     */
+    private String originGid;
+
 }

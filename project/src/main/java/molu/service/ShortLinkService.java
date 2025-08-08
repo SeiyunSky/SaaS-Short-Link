@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import molu.dao.entity.ShortLinkDO;
+import molu.dto.biz.ShortLinkStatsRecordDTO;
 import molu.dto.req.ShortLinkBatchCreateReqDTO;
 import molu.dto.req.ShortLinkCreateReqDTO;
 import molu.dto.req.ShortLinkPageReqDTO;
@@ -62,4 +63,13 @@ public interface ShortLinkService extends IService<ShortLinkDO> {
      * @param response 响应
      */
     void restoreUrl(String shortUri, HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * 短链接统计
+     *
+     * @param fullShortUrl         完整短链接
+     * @param gid                  分组标识
+     * @param shortLinkStatsRecord 短链接统计实体参数
+     */
+    void shortLinkStats(String fullShortUrl, String gid, ShortLinkStatsRecordDTO shortLinkStatsRecord);
 }

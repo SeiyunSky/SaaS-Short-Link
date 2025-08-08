@@ -20,6 +20,7 @@
             #{gid}
         </foreach>
         AND del_flag = 0
+        AND del_time = 0
         GROUP BY gid
     </select>
 

@@ -106,15 +106,17 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
     @Transactional
     @Override
     public void deleteShortLink(RecycleBinDeleteReqDTO requestParam) {
-        ShortLinkDO entity = baseMapper.selectOne(new LambdaQueryWrapper<ShortLinkDO>()
-                .eq(ShortLinkDO::getGid, requestParam.getGid())
+        LambdaUpdateWrapper<ShortLinkDO> updateWrapper = Wrappers.lambdaUpdate(ShortLinkDO.class)
                 .eq(ShortLinkDO::getFullShortUrl, requestParam.getFullShortUrl())
+                .eq(ShortLinkDO::getGid, requestParam.getGid())
                 .eq(ShortLinkDO::getEnableStatus, 1)
-        );
-        if (entity== null) {
-            throw new ClientException(CLIENT_ERROR);
-        }
-        // 触发自动逻辑删除
-        baseMapper.deleteById(entity.getId());
+                .eq(ShortLinkDO::getDelTime, 0L)
+                .eq(ShortLinkDO::getDelFlag, 0);
+        baseMapper.delete(updateWrapper);
+        ShortLinkDO delShortLinkDO = ShortLinkDO.builder()
+                .delTime(System.currentTimeMillis())
+                .build();
+        delShortLinkDO.setDelFlag(1);
+        baseMapper.update(delShortLinkDO, updateWrapper);
     }
 }

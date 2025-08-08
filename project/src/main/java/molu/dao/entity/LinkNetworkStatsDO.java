@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import molu.common.database.BaseDO;
 
 import java.util.Date;
 
@@ -13,7 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("t_link_network_stats")
-public class LinkNetworkStatsDO {
+public class LinkNetworkStatsDO extends BaseDO {
     /**
      * ID
      */

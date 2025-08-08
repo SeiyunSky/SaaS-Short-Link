@@ -11,18 +11,4 @@ public enum ValidDateTypeEnum {
 
     @Getter
     private final int type;
-
-    public ValidDateTypeEnum getType() {
-        return this;
-    }
-
-    public static ValidDateTypeEnum of(Integer type) {
-        if (type == null) return null;
-        for (ValidDateTypeEnum value : values()) {
-            if (value.type == type) {
-                return value;
-            }
-        }
-        throw new IllegalArgumentException("无效类型: " + type);
-    }
 }

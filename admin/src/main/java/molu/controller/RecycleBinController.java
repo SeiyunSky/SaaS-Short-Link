@@ -60,7 +60,7 @@ public class RecycleBinController {
     /**
      * 逻辑删除回收站短链接
      */
-    @PostMapping("/api/short-link/admin/v1/recycle-bin/delete")
+    @PostMapping("/api/short-link/admin/v1/recycle-bin/remove")
     public Result<Void> deleteShortLink(@RequestBody RecycleBinDeleteReqDTO requestParam){
         shortLinkRemoteService.deleteShortLink(requestParam);
         return Results.success();

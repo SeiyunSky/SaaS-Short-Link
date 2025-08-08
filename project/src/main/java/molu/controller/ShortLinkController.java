@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import molu.common.convention.result.Result;
 import molu.common.convention.result.Results;
 import molu.dto.req.ShortLinkBatchCreateReqDTO;
@@ -22,6 +23,7 @@ import java.util.List;
 /**
  * 短链接控制层
  */
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ShortLinkController {
@@ -70,6 +72,7 @@ public class ShortLinkController {
     @GetMapping("/api/short-link/v1/page")
     public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam){
 
+        log.info("requestParam:{}",requestParam);
         return Results.success(shortLinkService.pageShortLink(requestParam));
     }
 
