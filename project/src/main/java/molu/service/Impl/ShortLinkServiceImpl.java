@@ -24,6 +24,7 @@ import lombok.SneakyThrows;
 import molu.common.convention.exception.ClientException;
 import molu.common.convention.exception.ServiceException;
 import molu.common.enums.ValidDateTypeEnum;
+import molu.config.GotoDomainWhiteListConfiguration;
 import molu.dao.entity.*;
 import molu.dao.mapper.*;
 import lombok.extern.slf4j.Slf4j;
@@ -84,8 +85,8 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final LinkDeviceStatsMapper linkDeviceStatsMapper;
     private final LinkNetworkStatsMapper linkNetworkStatsMapper;
     private final LinkStatsTodayMapper linkStatsTodayMapper;
-    private final LinkStatsTodayService linkStatsTodayService;
     private final DelayShortLinkStatsProducer delayShortLinkStatsProducer;
+    private final GotoDomainWhiteListConfiguration gotoDomainWhiteListConfiguration;
 
     @Value("${short-link.stats.locale.amap-key}")
     private String localeMapKey;
@@ -105,7 +106,8 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         ||(!Objects.equals(requestParam.getValidDate(),null)) && requestParam.getValidDate().before(new Date())){
             throw new ClientException("自定义过期时间小于当前时间了！");
         }
-
+        //可跳转白名单管理
+        //verificationWhitelist(requestParam.getOriginUrl());
         //创建短链接
         String ret = generateSuffix(requestParam);
         String fullshortLink = StrBuilder
@@ -130,6 +132,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 .fullShortUrl(fullshortLink)
                 .build();
 
+        //创建路由
         ShortLinkGotoDO linkGotoDO = ShortLinkGotoDO.builder()
                 .fullShortUrl(fullshortLink)
                 .gid(requestParam.getGid())
@@ -208,6 +211,10 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(ShortLinkUpdateReqDTO requestParam) {
+
+        //可跳转白名单管理
+        //verificationWhitelist(requestParam.getOriginUrl());
+
         LambdaQueryWrapper<ShortLinkDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkDO.class)
                 .eq(ShortLinkDO::getGid, requestParam.getOriginGid())
                 .eq(ShortLinkDO::getFullShortUrl, requestParam.getFullShortUrl())
@@ -620,6 +627,21 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             }
         }
         return null;
+    }
+
+    private void verificationWhitelist(String originUrl) {
+        Boolean enable = gotoDomainWhiteListConfiguration.getEnable();
+        if (enable == null || !enable) {
+            return;
+        }
+        String domain = LinkUtil.extractDomain(originUrl);
+        if (StrUtil.isBlank(domain)) {
+            throw new ClientException("跳转链接填写错误");
+        }
+        List<String> details = gotoDomainWhiteListConfiguration.getDetails();
+        if (!details.contains(domain)) {
+            throw new ClientException("演示环境为避免恶意攻击，请生成以下网站跳转链接：" + gotoDomainWhiteListConfiguration.getNames());
+        }
     }
 
 }

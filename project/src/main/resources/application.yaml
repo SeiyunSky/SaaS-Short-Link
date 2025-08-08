@@ -30,3 +30,8 @@ short-link:
   stats:
    locale:
      amap-key: "ea90870fdf4982f9111b61d594a887fd"
+  goto-domain:
+    enable: false
+    names: ''
+    details:
+      - baidu.com
