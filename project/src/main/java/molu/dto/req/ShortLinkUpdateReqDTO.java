@@ -37,8 +37,6 @@ public class ShortLinkUpdateReqDTO extends BaseDO {
      */
     private Integer validDateType;
 
-
-
     /**
      * 有效期
      */
