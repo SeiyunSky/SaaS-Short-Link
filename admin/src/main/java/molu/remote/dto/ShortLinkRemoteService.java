@@ -7,10 +7,11 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import molu.common.biz.user.UserContext;
 import molu.common.convention.result.Result;
-import molu.common.convention.result.Results;
 import molu.remote.dto.req.*;
 import molu.remote.dto.resp.*;
+import molu.toolkit.TokenUtilL;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import java.util.Map;
 /**
  * 短链接中台远程调用服务
  */
+
 public interface ShortLinkRemoteService {
 
     /**
@@ -28,6 +30,7 @@ public interface ShortLinkRemoteService {
      * @return 响应
      */
     default Result<ShortLinkCreateRespDTO> createLink(ShortLinkCreateReqDTO requestParam){
+        TokenUtilL.refreshToken(UserContext.getUsername());
         String resultBodyStr = HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/create", JSON.toJSONString(requestParam));
         return JSON.parseObject(resultBodyStr, new TypeReference<Result<ShortLinkCreateRespDTO>>() {
         });
@@ -39,6 +42,7 @@ public interface ShortLinkRemoteService {
      * @return 响应
      */
     default Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam){
+        TokenUtilL.refreshToken(UserContext.getUsername());
         //用hutool的httpUtil解决
         Map<String,Object> map = new HashMap<>();
         map.put("gid",requestParam.getGid());
@@ -58,6 +62,7 @@ public interface ShortLinkRemoteService {
      * @param requestParam 修改
      */
     default void update(ShortLinkUpdateReqDTO requestParam){
+        TokenUtilL.refreshToken(UserContext.getUsername());
         // Hutool的HttpUtil.post()是最简单快捷的调用方式
         // 用HttpUtil.post()比构造PUT请求更方便（如Hutool工具类）  HttpUtil.post(url, body);
         // 对比需要额外配置的PUT：HttpRequest.put(url).body(body).execute(
@@ -72,6 +77,7 @@ public interface ShortLinkRemoteService {
      * @return 响应
      */
     default Result<List<ShortLinkCountQueryRespDTO>> groupShortLinkCount(List<String> requestParam){
+        TokenUtilL.refreshToken(UserContext.getUsername());
         Map<String,Object> map = new HashMap<>();
         map.put("requestParam",requestParam);
         String retStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/count",map);
@@ -85,6 +91,7 @@ public interface ShortLinkRemoteService {
      * @return 标题
      */
     default Result<String> getTitleByUrl(@RequestParam String url){
+        TokenUtilL.refreshToken(UserContext.getUsername());
         String ret = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/title?url="+url);
         return JSON.parseObject(ret,new TypeReference<>(){
         });
@@ -95,6 +102,7 @@ public interface ShortLinkRemoteService {
      * @param requestParam RBSaveDTO
      */
     default void saveRecycleBin(RecycleBinSaveReqDTO requestParam){
+        TokenUtilL.refreshToken(UserContext.getUsername());
         HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/recyclebin/save",JSON.toJSONString(requestParam));
     };
 
@@ -104,6 +112,7 @@ public interface ShortLinkRemoteService {
      * @return 响应
      */
     default Result<IPage<ShortLinkPageRespDTO>> pageShortLinkRecycleOne(ShortLinkRecycleBinPageReqDTO requestParam){
+        TokenUtilL.refreshToken(UserContext.getUsername());
         Map<String,Object> map = new HashMap<>();
         map.put("gidList",requestParam.getGidList());
         map.put("current",requestParam.getCurrent());
@@ -118,6 +127,7 @@ public interface ShortLinkRemoteService {
      * @param requestParam RB
      */
     default void recoverShortLink(RecycleBinRecoverReqDTO requestParam){
+        TokenUtilL.refreshToken(UserContext.getUsername());
         try {
             HttpResponse response = HttpRequest.post("http://127.0.0.1:8001/api/short-link/v1/recyclebin/recover")
                     .body(JSON.toJSONString(requestParam))
@@ -139,6 +149,7 @@ public interface ShortLinkRemoteService {
     };
 
     default void deleteShortLink(RecycleBinDeleteReqDTO requestParam){
+        TokenUtilL.refreshToken(UserContext.getUsername());
         try {
             HttpResponse response = HttpRequest.post("http://127.0.0.1:8001/api/short-link/v1/recyclebin/delete")
                     .body(JSON.toJSONString(requestParam))
@@ -166,6 +177,7 @@ public interface ShortLinkRemoteService {
      * @return 短链接监控信息
      */
     default Result<ShortLinkStatsRespDTO> oneShortLinkStats(ShortLinkStatsReqDTO requestParam) {
+        TokenUtilL.refreshToken(UserContext.getUsername());
         String resultBodyStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats", BeanUtil.beanToMap(requestParam));
         return JSON.parseObject(resultBodyStr, new TypeReference<>() {
         });
@@ -178,6 +190,7 @@ public interface ShortLinkRemoteService {
      * @return 分组短链接监控信息
      */
     default Result<ShortLinkStatsRespDTO> groupShortLinkStats(ShortLinkGroupStatsReqDTO requestParam) {
+        TokenUtilL.refreshToken(UserContext.getUsername());
         String resultBodyStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats/group", BeanUtil.beanToMap(requestParam));
         return JSON.parseObject(resultBodyStr, new TypeReference<>() {
         });
@@ -189,6 +202,7 @@ public interface ShortLinkRemoteService {
      * @return 短链接监控信息
      */
     default Result<IPage<ShortLinkStatsAccessRecordRespDTO>> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam){
+        TokenUtilL.refreshToken(UserContext.getUsername());
         Map<String, Object> stringObjectMap = BeanUtil.beanToMap(requestParam);
         stringObjectMap.remove("orders");
         stringObjectMap.remove("records");
@@ -202,6 +216,7 @@ public interface ShortLinkRemoteService {
      * @return 短链接监控信息
      */
     default Result<IPage<ShortLinkStatsAccessRecordRespDTO>> groupShortLinkStatsAccessRecord(ShortLinkGroupStatsAccessRecordReqDTO requestParam){
+        TokenUtilL.refreshToken(UserContext.getUsername());
         Map<String, Object> stringObjectMap = BeanUtil.beanToMap(requestParam);
         stringObjectMap.remove("orders");
         stringObjectMap.remove("records");
@@ -216,6 +231,7 @@ public interface ShortLinkRemoteService {
      * @return 短链接批量创建响应
      */
     default Result<ShortLinkBatchCreateRespDTO> batchCreateShortLink(ShortLinkBatchCreateReqDTO requestParam) {
+        TokenUtilL.refreshToken(UserContext.getUsername());
         String resultBodyStr = HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/create/batch", JSON.toJSONString(requestParam));
         return JSON.parseObject(resultBodyStr, new TypeReference<>() {
         });

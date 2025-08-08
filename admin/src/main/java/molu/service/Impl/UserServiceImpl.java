@@ -31,9 +31,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -112,6 +110,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     @Override
     public UserLoginRespDTO login(UserLoginReqDTO requestParam) {
+        //验证数据库密钥
         LambdaQueryWrapper<UserDO> queryWrapper = Wrappers.lambdaQuery(UserDO.class)
                         .eq(UserDO::getUsername, requestParam.getUsername())
                         .eq(UserDO::getPassword, requestParam.getPassword())
@@ -122,19 +121,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
             throw new ClientException(UserErrorCodeEnum.USER_NOT_EXIST);
         }
 
-        Map<Object,Object> hasLogin = stringRedisTemplate.opsForHash().entries("login_"+requestParam.getUsername());
-        if(CollUtil.isNotEmpty(hasLogin)) {
-            return new UserLoginRespDTO(hasLogin
-                    .keySet()
-                    .stream()
-                    .findFirst()
-                    .map(Object::toString)
-                    .orElseThrow(
-                            ()-> new ClientException(UserErrorCodeEnum.USER_LOGIN_FAILED))
-            );
+        //生成临时UUID组合token
+        String uuid = UUID.randomUUID().toString();
+        String loginKey = "login_" + requestParam.getUsername();
+
+        Map<Object,Object> hasLogin = stringRedisTemplate.opsForHash().entries(loginKey);
+
+        if(hasLogin.size()>=3) {
+            Optional<Map.Entry<Object, Object>> oldestEntry = hasLogin.entrySet().stream()
+                    .min(Comparator.comparing(e -> Long.parseLong(e.getValue().toString())));
+
+            oldestEntry.ifPresent(entry -> {
+                // 删除最早的Token
+                stringRedisTemplate.opsForHash().delete(loginKey, entry.getKey());
+            });
         }
 
-        String uuid = UUID.randomUUID().toString();
+        //限制token可使用时长
         stringRedisTemplate.opsForHash().put("login_"+requestParam.getUsername(),uuid,JSON.toJSONString(userDO));
         stringRedisTemplate.expire("login_"+requestParam.getUsername(),30L,TimeUnit.MINUTES);
 
