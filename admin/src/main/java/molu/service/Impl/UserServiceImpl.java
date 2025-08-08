@@ -1,6 +1,7 @@
 package molu.service.Impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.MD5;
 import com.alibaba.fastjson2.JSON;
@@ -121,14 +122,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
             throw new ClientException(UserErrorCodeEnum.USER_NOT_EXIST);
         }
 
-        Boolean hasLogin = stringRedisTemplate.hasKey("login_"+requestParam.getUsername());
-        if(hasLogin!=null && hasLogin) {
-            throw new ClientException(UserErrorCodeEnum.USER_LOGINING);
+        Map<Object,Object> hasLogin = stringRedisTemplate.opsForHash().entries("login_"+requestParam.getUsername());
+        if(CollUtil.isNotEmpty(hasLogin)) {
+            return new UserLoginRespDTO(hasLogin
+                    .keySet()
+                    .stream()
+                    .findFirst()
+                    .map(Object::toString)
+                    .orElseThrow(
+                            ()-> new ClientException(UserErrorCodeEnum.USER_LOGIN_FAILED))
+            );
         }
 
         String uuid = UUID.randomUUID().toString();
         stringRedisTemplate.opsForHash().put("login_"+requestParam.getUsername(),uuid,JSON.toJSONString(userDO));
-        stringRedisTemplate.expire("login_"+requestParam.getUsername(),30L,TimeUnit.DAYS);
+        stringRedisTemplate.expire("login_"+requestParam.getUsername(),30L,TimeUnit.MINUTES);
 
         return new UserLoginRespDTO(uuid);
     }
