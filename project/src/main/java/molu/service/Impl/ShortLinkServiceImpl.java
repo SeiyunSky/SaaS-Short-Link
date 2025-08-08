@@ -25,12 +25,11 @@ import molu.common.convention.exception.ServiceException;
 import molu.dao.entity.*;
 import molu.dao.mapper.*;
 import lombok.extern.slf4j.Slf4j;
+import molu.dto.req.ShortLinkBatchCreateReqDTO;
 import molu.dto.req.ShortLinkCreateReqDTO;
 import molu.dto.req.ShortLinkPageReqDTO;
 import molu.dto.req.ShortLinkUpdateReqDTO;
-import molu.dto.resp.ShortLinkCountQueryRespDTO;
-import molu.dto.resp.ShortLinkCreateRespDTO;
-import molu.dto.resp.ShortLinkPageRespDTO;
+import molu.dto.resp.*;
 import molu.toolkit.HashUtil;
 import molu.toolkit.LinkUtil;
 import org.redisson.api.RBloomFilter;
@@ -146,6 +145,34 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 .gid(shortLinkDO.getGid())
                 .build();
     }
+
+    @Override
+    public ShortLinkBatchCreateRespDTO batchCreateShortLink(ShortLinkBatchCreateReqDTO requestParam) {
+        List<String> originUrls = requestParam.getOriginUrls();
+        List<String> describes = requestParam.getDescribes();
+        List<ShortLinkBaseInfoRespDTO> result = new ArrayList<>();
+        for (int i = 0; i < originUrls.size(); i++) {
+            ShortLinkCreateReqDTO shortLinkCreateReqDTO = BeanUtil.toBean(requestParam, ShortLinkCreateReqDTO.class);
+            shortLinkCreateReqDTO.setOriginUrl(originUrls.get(i));
+            shortLinkCreateReqDTO.setDescribe(describes.get(i));
+            try {
+                ShortLinkCreateRespDTO shortLink = createShortLink(shortLinkCreateReqDTO);
+                ShortLinkBaseInfoRespDTO linkBaseInfoRespDTO = ShortLinkBaseInfoRespDTO.builder()
+                        .fullShortUrl(shortLink.getFullShortUrl())
+                        .originUrl(shortLink.getOriginUrl())
+                        .describe(describes.get(i))
+                        .build();
+                result.add(linkBaseInfoRespDTO);
+            } catch (Throwable ex) {
+                log.error("批量创建短链接失败，原始参数：{}", originUrls.get(i));
+            }
+        }
+        return ShortLinkBatchCreateRespDTO.builder()
+                .total(result.size())
+                .baseLinkInfos(result)
+                .build();
+    }
+
 
     @Override
     public IPage<ShortLinkPageRespDTO> pageShortLink(ShortLinkPageReqDTO requestParam) {

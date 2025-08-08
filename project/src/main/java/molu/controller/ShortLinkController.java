@@ -6,9 +6,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import molu.common.convention.result.Result;
 import molu.common.convention.result.Results;
+import molu.dto.req.ShortLinkBatchCreateReqDTO;
 import molu.dto.req.ShortLinkCreateReqDTO;
 import molu.dto.req.ShortLinkPageReqDTO;
 import molu.dto.req.ShortLinkUpdateReqDTO;
+import molu.dto.resp.ShortLinkBatchCreateRespDTO;
 import molu.dto.resp.ShortLinkCountQueryRespDTO;
 import molu.dto.resp.ShortLinkCreateRespDTO;
 import molu.dto.resp.ShortLinkPageRespDTO;
@@ -39,6 +41,14 @@ public class ShortLinkController {
     public Result<ShortLinkCreateRespDTO> createShortLink(@RequestBody ShortLinkCreateReqDTO requestParam){
         return Results.success(shortLinkService.createShortLink(requestParam));
 
+    }
+
+    /**
+     * 批量创建短链接
+     */
+    @PostMapping("/api/short-link/v1/create/batch")
+    public Result<ShortLinkBatchCreateRespDTO> batchCreateShortLink(@RequestBody ShortLinkBatchCreateReqDTO requestParam) {
+        return Results.success(shortLinkService.batchCreateShortLink(requestParam));
     }
 
     /**

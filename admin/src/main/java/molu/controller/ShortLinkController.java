@@ -4,16 +4,23 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import molu.common.convention.result.Result;
 import molu.common.convention.result.Results;
 import molu.remote.dto.ShortLinkRemoteService;
+import molu.remote.dto.req.ShortLinkBatchCreateReqDTO;
 import molu.remote.dto.req.ShortLinkCreateReqDTO;
 import molu.remote.dto.req.ShortLinkPageReqDTO;
 import molu.remote.dto.req.ShortLinkUpdateReqDTO;
+import molu.remote.dto.resp.ShortLinkBaseInfoRespDTO;
+import molu.remote.dto.resp.ShortLinkBatchCreateRespDTO;
 import molu.remote.dto.resp.ShortLinkCreateRespDTO;
 import molu.remote.dto.resp.ShortLinkPageRespDTO;
+import molu.toolkit.EasyExcelWebUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,6 +35,20 @@ public class ShortLinkController {
     public Result<ShortLinkCreateRespDTO> createShortLink(@RequestBody ShortLinkCreateReqDTO requestParam){
         return shortLinkRemoteService.createLink(requestParam);
     }
+
+    /**
+     * 批量创建短链接
+     */
+    @SneakyThrows
+    @PostMapping("/api/short-link/admin/v1/create/batch")
+    public void batchCreateShortLink(@RequestBody ShortLinkBatchCreateReqDTO requestParam, HttpServletResponse response) {
+        Result<ShortLinkBatchCreateRespDTO> shortLinkBatchCreateRespDTOResult = shortLinkRemoteService.batchCreateShortLink(requestParam);
+        if (shortLinkBatchCreateRespDTOResult.isSuccess()) {
+            List<ShortLinkBaseInfoRespDTO> baseLinkInfos = shortLinkBatchCreateRespDTOResult.getData().getBaseLinkInfos();
+            EasyExcelWebUtil.write(response, "批量创建短链接-SaaS短链接系统", ShortLinkBaseInfoRespDTO.class, baseLinkInfos);
+        }
+    }
+
 
     /**
      * 分页查询短链接

@@ -1,6 +1,9 @@
 package molu.dto.req;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import molu.common.database.BaseDO;
 
 import java.util.Date;
@@ -9,6 +12,9 @@ import java.util.Date;
  * 短链接创建请求对象
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ShortLinkCreateReqDTO extends BaseDO {
 
     /**
