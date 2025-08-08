@@ -31,7 +31,7 @@ public class RecycleBinController {
      * @param requestParam 反应
      * @return 反应
      */
-    @PostMapping("/api/short-link/admin/v1/recyclebin/saver")
+    @PostMapping("/api/short-link/admin/v1/recycle-bin/save")
     public Result<Void> saveRecycleBin(@RequestBody RecycleBinSaveReqDTO requestParam) {
         shortLinkRemoteService.saveRecycleBin(requestParam);
         return Results.success();
@@ -42,7 +42,7 @@ public class RecycleBinController {
      * @param requestParam 参数
      * @return 参数
      */
-    @GetMapping("/api/short-link/admin/v1/recyclebin/page")
+    @GetMapping("/api/short-link/admin/v1/recycle-bin/page")
     public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkRecycleBinPageReqDTO requestParam){
         return recycleBinService.pageShortLinkRecycleOne(requestParam);
     }
@@ -51,7 +51,7 @@ public class RecycleBinController {
      * 恢复删除短链接
      * @param requestParam 参数
      */
-    @PostMapping("/api/short-link/admin/v1/recyclebin/recover")
+    @PostMapping("/api/short-link/admin/v1/recycle-bin/recover")
     public Result<Void> recoverShortLink(@RequestBody RecycleBinRecoverReqDTO requestParam){
         shortLinkRemoteService.recoverShortLink(requestParam);
         return Results.success();
@@ -60,7 +60,7 @@ public class RecycleBinController {
     /**
      * 逻辑删除回收站短链接
      */
-    @PostMapping("/api/short-link/admin/v1/recyclebin/delete")
+    @PostMapping("/api/short-link/admin/v1/recycle-bin/delete")
     public Result<Void> deleteShortLink(@RequestBody RecycleBinDeleteReqDTO requestParam){
         shortLinkRemoteService.deleteShortLink(requestParam);
         return Results.success();
