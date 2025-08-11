@@ -1,5 +1,6 @@
 package molu.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,6 +16,7 @@ import molu.dto.resp.ShortLinkBatchCreateRespDTO;
 import molu.dto.resp.ShortLinkCountQueryRespDTO;
 import molu.dto.resp.ShortLinkCreateRespDTO;
 import molu.dto.resp.ShortLinkPageRespDTO;
+import molu.handler.CustomBlockHandler;
 import molu.service.ShortLinkService;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +42,12 @@ public class ShortLinkController {
      * @return 参数
      */
     @PostMapping("/api/short-link/v1/create")
+    //通过注解加入
+    @SentinelResource(
+            value = "create_short_link",
+            blockHandler = "createShortLinkBlockHandlerMethod",
+            blockHandlerClass = CustomBlockHandler.class
+    )
     public Result<ShortLinkCreateRespDTO> createShortLink(@RequestBody ShortLinkCreateReqDTO requestParam){
         return Results.success(shortLinkService.createShortLink(requestParam));
 
