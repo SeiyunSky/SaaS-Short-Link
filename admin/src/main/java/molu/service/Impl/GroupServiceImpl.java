@@ -1,12 +1,16 @@
 package molu.service.Impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
 import molu.common.biz.user.UserContext;
+import molu.common.convention.exception.ClientException;
 import molu.common.convention.result.Result;
 import molu.common.database.BaseDO;
 import molu.dao.entity.GroupDO;
@@ -18,56 +22,64 @@ import molu.remote.dto.ShortLinkRemoteService;
 import molu.remote.dto.resp.ShortLinkCountQueryRespDTO;
 import molu.service.GroupService;
 import molu.toolkit.RandomCodeUtil;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static molu.constant.RedisCacheConstant.LOCK_GROUP_CREATE;
 
 /**
  * 短链接分组实现层
  */
 @Service
 @Slf4j
-//todo extends是什么意思
+@RequiredArgsConstructor
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implements GroupService {
 
+    @Value("${short-link.group.max-num}")
+    private Integer groupSize;
+
+    private final RedissonClient redissonClient;
     ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService() {};
 
     @Override
     public void saveGroup(String groupName) {
-        String gid;
-
-        do {
-            gid = RandomCodeUtil.generateRandomCode();
-        } while (hasGid(gid));
-
-        GroupDO groupDO = GroupDO.builder()
-                .gid(gid)
-                .sortOrder(0)
-                .username(UserContext.getUsername())
-                .name(groupName)
-                .build();
-        baseMapper.insert(groupDO);
+        saveGroup(UserContext.getUsername(), groupName);
     }
 
 
     public void saveGroup(String username,String groupName) {
-        String gid;
+        RLock lock = redissonClient.getLock(String.format(LOCK_GROUP_CREATE,username));
+        lock.lock();
+        try{
+            LambdaQueryWrapper<GroupDO> wrapper = Wrappers.lambdaQuery(GroupDO.class)
+                    .eq(GroupDO::getUsername,username)
+                    .eq(GroupDO::getDelFlag,0);
+            List<GroupDO> list = baseMapper.selectList(wrapper);
+            if(CollUtil.isNotEmpty(list)&& list.size()>= groupSize){
+                throw new ClientException(String.format("创建分组已达上限:%d",groupSize));
+            }
+            String gid;
+            do {
+                gid = RandomCodeUtil.generateRandomCode();
+            } while (hasGid(gid));
+            GroupDO groupDO = GroupDO.builder()
+                    .gid(gid)
+                    .sortOrder(0)
+                    .username(username)
+                    .name(groupName)
+                    .build();
+            baseMapper.insert(groupDO);
+        }finally {
+            lock.unlock();
+        }
 
-        do {
-            gid = RandomCodeUtil.generateRandomCode();
-        } while (hasGid(gid));
-
-        GroupDO groupDO = GroupDO.builder()
-                .gid(gid)
-                .sortOrder(0)
-                .username(username)
-                .name(groupName)
-                .build();
-        baseMapper.insert(groupDO);
     }
 
     @Override

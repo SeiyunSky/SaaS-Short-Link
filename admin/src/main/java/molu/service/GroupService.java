@@ -46,8 +46,8 @@ public interface GroupService extends IService<GroupDO> {
 
     /**
      * 另一个
-     * @param username
-     * @param defaulter
+     * @param username 这啥
+     * @param defaulter 这啥
      */
     void saveGroup(String username, String defaulter);
 }
