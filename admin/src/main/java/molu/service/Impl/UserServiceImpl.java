@@ -127,14 +127,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
         Map<Object,Object> hasLogin = stringRedisTemplate.opsForHash().entries(loginKey);
 
-        if(hasLogin.size()>=3) {
-            Optional<Map.Entry<Object, Object>> oldestEntry = hasLogin.entrySet().stream()
-                    .min(Comparator.comparing(e -> Long.parseLong(e.getValue().toString())));
-
-            oldestEntry.ifPresent(entry -> {
-                // 删除最早的Token
-                stringRedisTemplate.opsForHash().delete(loginKey, entry.getKey());
-            });
+        if (hasLogin.size() >= 3) {
+            // 随机选择一个token删除
+            String randomToken = hasLogin.keySet().iterator().next().toString();
+            stringRedisTemplate.opsForHash().delete(loginKey, randomToken);
+            log.info("随机删除旧token: {}", randomToken);
         }
 
         //限制token可使用时长

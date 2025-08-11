@@ -1,4 +1,5 @@
 package molu.config;
+import molu.common.biz.user.UserCacheRefreshFilter;
 import molu.common.biz.user.UserFlowRiskControlFilter;
 import molu.common.biz.user.UserTransmitFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -37,6 +38,17 @@ public class UserConfiguration {
         registration.setFilter(new UserFlowRiskControlFilter(stringRedisTemplate, userFlowRiskControlConfiguration));
         registration.addUrlPatterns("/*");
         registration.setOrder(10);
+        return registration;
+    }
+
+    @Bean
+    public FilterRegistrationBean<UserCacheRefreshFilter> globalUserCacheRefreshFilter(
+            StringRedisTemplate stringRedisTemplate
+    ){
+        FilterRegistrationBean<UserCacheRefreshFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(new UserCacheRefreshFilter(stringRedisTemplate));
+        registration.addUrlPatterns("/*");
+        registration.setOrder(20);
         return registration;
     }
 }
