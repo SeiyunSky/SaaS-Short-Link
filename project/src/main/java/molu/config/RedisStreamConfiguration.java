@@ -13,10 +13,7 @@ import org.springframework.data.redis.connection.stream.StreamOffset;
 import org.springframework.data.redis.stream.StreamMessageListenerContainer;
 
 import java.time.Duration;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -38,17 +35,19 @@ public class RedisStreamConfiguration {
     public ExecutorService asyncStreamConsumer() {
         AtomicInteger index = new AtomicInteger();
         int processors = Runtime.getRuntime().availableProcessors();
-        return new ThreadPoolExecutor(processors,
-                processors + processors >> 1,
+        return new ThreadPoolExecutor(
+                1,
+                1,
                 60,
                 TimeUnit.SECONDS,
-                new LinkedBlockingQueue<>(),
+                new SynchronousQueue<>(),
                 runnable -> {
                     Thread thread = new Thread(runnable);
                     thread.setName("stream_consumer_short-link_stats_" + index.incrementAndGet());
                     thread.setDaemon(true);
                     return thread;
-                }
+                },
+                new ThreadPoolExecutor.DiscardOldestPolicy()
         );
     }
 
