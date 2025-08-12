@@ -26,9 +26,9 @@ public class UserTransmitFilter implements Filter {
 
     private final StringRedisTemplate stringRedisTemplate;
     private static final List<String> IGNORE_URL = Lists.newArrayList(
-            "/api/shortlink/admin/v1/user/login",
-            "/api/shortlink/admin/v1/user/has-username",
-            "/api/shortlink/admin/v1/user"
+            "/api/short-link/admin/v1/user/login",
+            "/api/short-link/admin/v1/user/has-username",
+            "/api/short-link/admin/v1/user"
             );
 
 
@@ -36,14 +36,12 @@ public class UserTransmitFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String requestURI = httpServletRequest.getRequestURI();
-
         if(IGNORE_URL.stream().noneMatch(requestURI::startsWith)){
             String method = httpServletRequest.getMethod();
             if (!(Objects.equals(requestURI, "/api/shortlink/admin/v1/user")&&Objects.equals("POST", method))) {
                 String username = httpServletRequest.getHeader("username");
                 String token = httpServletRequest.getHeader("token");
                 if(StrUtil.isAllBlank(username, token)){
-                    //todo 全局异常拦截器拦截不到这里
                     throw new ClientException(UserErrorCodeEnum.USER_TOKEN_Fail);
                 }
 
@@ -51,12 +49,10 @@ public class UserTransmitFilter implements Filter {
                 try{
                     userInfoJsonStr = stringRedisTemplate.opsForHash().get("login_" + username, token);
                     if(userInfoJsonStr == null){
-                        //todo 全局异常拦截器拦截不到这里
                         log.error("Failed to verify user token from Redis");
                         throw new ClientException(UserErrorCodeEnum.USER_TOKEN_Fail);
                     }
                 }catch (Exception e){
-                    //todo 全局异常拦截器拦截不到这里
                     throw new ClientException(UserErrorCodeEnum.USER_TOKEN_Fail);
                 }
 
