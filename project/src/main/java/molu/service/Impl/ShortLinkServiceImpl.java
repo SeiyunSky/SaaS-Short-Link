@@ -448,7 +448,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             //生成短链接
             String originUrl = requestParam.getOriginUrl();
             //加当前毫秒数，防止重复按一个东西生成，但是这么做，在大规模并发场景下，容易出现重复生成URL
-            suffix = HashUtil.hashToBase62(originUrl+System.currentTimeMillis());
+            suffix = HashUtil.hashToBase62(originUrl+ UUID.randomUUID());
             if(!linkCreateRegisterCachePenetrationBloomFilter.contains(defaultDomain+"/"+suffix)){
                 break;
             }
