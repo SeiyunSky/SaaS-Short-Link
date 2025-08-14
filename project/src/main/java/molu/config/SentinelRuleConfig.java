@@ -20,8 +20,8 @@ public class SentinelRuleConfig implements InitializingBean {
         createOrderRule.setResource("create_short-link");
         //设置限制类型为QPS 每秒查询数
         createOrderRule.setGrade(RuleConstant.FLOW_GRADE_QPS);
-        //每秒访问上线
-        createOrderRule.setCount(10);
+        //每秒访问上限
+        createOrderRule.setCount(100);
         rules.add(createOrderRule);
         FlowRuleManager.loadRules(rules);
     }
