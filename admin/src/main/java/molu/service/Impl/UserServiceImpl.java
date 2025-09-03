@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.MD5;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -22,6 +23,7 @@ import molu.dto.req.UserRegisterReqDTO;
 import molu.dto.req.UserUpdateReqDTO;
 import molu.dto.resp.UserLoginRespDTO;
 import molu.dto.resp.UserResponseDTO;
+import molu.handler.RegisterHandler;
 import molu.service.GroupService;
 import molu.service.UserService;
 import org.redisson.api.RBloomFilter;
@@ -70,6 +72,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     }
 
     @Override
+    @SentinelResource(
+            value = "userRegister",
+            blockHandler = "RegisterHandler",
+            fallback = "handleFallback",
+            blockHandlerClass = RegisterHandler.class
+    )
     public void Register(UserRegisterReqDTO requestParam) {
 
         if(!hasUsername(requestParam.getUsername())) {

@@ -70,7 +70,6 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
 
         IPage<ShortLinkDO> ret = baseMapper.selectPage(requestParam,queryWrapper);
         return ret.convert(each-> BeanUtil.toBean(each,ShortLinkPageRespDTO.class));
-
     }
 
     @Transactional

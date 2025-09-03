@@ -53,6 +53,8 @@ public class RedisStreamConfiguration {
 
     @Bean(initMethod = "start", destroyMethod = "stop")
     public StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer(ExecutorService asyncStreamConsumer) {
+
+        //StreamMessageListenerContainerOptions是 StreamMessageListenerContainer的 静态嵌套类（Static Nested Class），在 Java 中访问嵌套类必须通过外部类限定，除非使用静态导入。
         StreamMessageListenerContainer.StreamMessageListenerContainerOptions<String, MapRecord<String, String, String>> options =
                 StreamMessageListenerContainer.StreamMessageListenerContainerOptions
                         .builder()
@@ -61,7 +63,7 @@ public class RedisStreamConfiguration {
                         // 执行从 Stream 拉取到消息的任务流程
                         .executor(asyncStreamConsumer)
                         // 如果没有拉取到消息，需要阻塞的时间。不能大于 ${spring.data.redis.timeout}，否则会超时
-                        .pollTimeout(Duration.ofSeconds(3))
+                        .pollTimeout(Duration.ofSeconds(10))
                         .build();
         StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer =
                 StreamMessageListenerContainer.create(redisConnectionFactory, options);
